@@ -12,7 +12,7 @@
   "GroupC": {
     "mosquito": "Moderate",
     "fly": "Low",
-    "ulv": "Suspend"
+    "ulv": "Caution"
   },
   "GroupD": {
     "mosquito": "Moderate",
@@ -20,8 +20,8 @@
     "ulv": "Suspend"
   },
   "GroupE": {
-    "mosquito": "Moderate",
+    "mosquito": "Low",
     "fly": "Low",
-    "ulv": "Suspend"
+    "ulv": "Caution"
   }
 }
