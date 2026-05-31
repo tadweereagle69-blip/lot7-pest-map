@@ -577,8 +577,13 @@
     function createRiskLookup(data) {
       const lookup = {};
 
-      const records = data?.areas || data?.risk_records || data || [];
+      let records = [];
 
+if (Array.isArray(data)) {
+  records = data;
+} else {
+  records = data?.areas || data?.risk_records || data?.records || [];
+}
       records.forEach(item => {
         const areaName =
           item.area_name ||
@@ -593,14 +598,13 @@
       return lookup;
     }
 
-   function getRiskRecords() {
+function getRiskRecords() {
   if (Array.isArray(riskData)) {
     return riskData;
   }
 
   return riskData?.areas || riskData?.risk_records || riskData?.records || [];
 }
-
     // Load files
     async function loadData() {
       try {
