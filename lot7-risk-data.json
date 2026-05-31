@@ -1,0 +1,352 @@
+[
+  {
+    "area_group": "AREA 1",
+    "area_name": "AL MUTAWAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 1",
+    "area_name": "AL MUTARID",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 1",
+    "area_name": "AL JAHILI",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 1",
+    "area_name": "CENTRAL DISTRICT",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "MAZYAD",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "AL NOUD",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "UM GHAFAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "SA'",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "MALAQIT",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "AL AFLAJ",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "KHATM AL SHIKLAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "AL RUWAYDAT",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "AL SHUWAYMAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "AL SAROUJ",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 2",
+    "area_name": "AL DHAHIR",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "INDUSTRIAL AREA",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "NI'MAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "JABAL HAFEET",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "MBAZZARAH AL KHADRA",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "SHIAB AL ASHKHAR",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "SHI'BAT AL WUTAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "AIN AL FAYDAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 3",
+    "area_name": "AL DHAHRAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 4",
+    "area_name": "FALAJ HAZZA'",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 4",
+    "area_name": "ZAKHIR",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 4",
+    "area_name": "INDUSTRIAL CITY",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 4",
+    "area_name": "AL QISEES",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 4",
+    "area_name": "AL IQABIYYAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 4",
+    "area_name": "AL RAWDAH AL SHARQIYAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 5",
+    "area_name": "AL QOU",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 5",
+    "area_name": "BU KIRAYYAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 5",
+    "area_name": "AL WIQAN",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 5",
+    "area_name": "UM AL ZUMOUL",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 5",
+    "area_name": "ABU HIRAYBAH",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  },
+  {
+    "area_group": "AREA 5",
+    "area_name": "AL A'RAD",
+    "mosquito_risk": "Low",
+    "fly_risk": "Low",
+    "ulv_status": "Suitable",
+    "risk_score": 25,
+    "map_color": "Green",
+    "recommendation": "Routine monitoring"
+  }
+]
