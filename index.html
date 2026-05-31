@@ -593,9 +593,13 @@
       return lookup;
     }
 
-    function getRiskRecords() {
-      return riskData?.areas || riskData?.risk_records || [];
-    }
+   function getRiskRecords() {
+  if (Array.isArray(riskData)) {
+    return riskData;
+  }
+
+  return riskData?.areas || riskData?.risk_records || riskData?.records || [];
+}
 
     // Load files
     async function loadData() {
