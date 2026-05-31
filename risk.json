@@ -1,0 +1,7 @@
+{
+  "GroupA": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Monitor shaded waste areas and inspect water leakage."},
+  "GroupB": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Focus sanitation around farms and organic waste areas."},
+  "GroupC": {"mosquito":"Moderate", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Inspect farms, waste sites, and standing water sources."},
+  "GroupD": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Enhance sanitation and monitor irrigation leakage."},
+  "GroupE": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Focus livestock zones and protected farm structures."}
+}
