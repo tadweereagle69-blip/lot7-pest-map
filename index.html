@@ -1,294 +1,161 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lot 7 AI Pest Risk Map</title>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <style>
-    html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; }
-    #map { height: 100%; width: 100%; }
-    .panel { position:absolute; top:12px; right:12px; z-index:1000; background:white; padding:12px 14px; border-radius:10px; box-shadow:0 2px 12px rgba(0,0,0,.25); max-width:340px; }
-    .panel h3 { margin:0 0 8px; font-size:16px; }
-    .legend-row { display:flex; align-items:center; gap:8px; margin:5px 0; font-size:13px; }
-    .box { width:16px; height:16px; border:1px solid #555; }
-    .controls { position:absolute; bottom:20px; left:12px; z-index:1000; background:white; padding:10px 12px; border-radius:10px; box-shadow:0 2px 12px rgba(0,0,0,.25); font-size:13px; }
-    select, button { padding:6px; border-radius:6px; border:1px solid #aaa; }
-    button { cursor:pointer; margin-left:6px; background:#f7f7f7; }
-    button:hover { background:#e9e9e9; }
-    .status { margin-top:8px; font-size:12px; color:#555; }
-    .group-label { background:rgba(255,255,255,0.92); border:1px solid #333; border-radius:6px; padding:4px 7px; font-weight:bold; font-size:12px; color:#111; box-shadow:0 1px 6px rgba(0,0,0,.25); white-space:nowrap; }
+    html, body { height: 100%; margin: 0; font-family: Arial, sans-serif; background:#f3f6fa; }
+    #map { height: 100vh; width: 100%; }
+
+    .top-panel {
+      position: absolute; top: 12px; left: 50px; z-index: 1000;
+      background: white; border-radius: 12px; padding: 12px 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18); min-width: 280px;
+      border-left: 5px solid #0b5cab;
+    }
+    .top-panel h2 { margin: 0; color:#0b5cab; font-size: 18px; }
+    .top-panel p { margin: 6px 0 0; font-size: 12px; color:#444; }
+
+    .legend {
+      position: absolute; bottom: 24px; left: 12px; z-index: 1000;
+      background:white; padding: 12px 14px; border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18); font-size: 13px;
+    }
+    .legend-title { font-weight:bold; margin-bottom:8px; color:#0b5cab; }
+    .legend-row { display:flex; align-items:center; gap:8px; margin:5px 0; }
+    .box { width:16px; height:16px; border-radius:4px; border:1px solid #777; }
+
+    .popup-title { font-weight:bold; color:#0b5cab; font-size:15px; margin-bottom:6px; }
+    .popup-row { margin:3px 0; font-size:13px; }
+    .badge { padding:2px 7px; border-radius:10px; color:white; font-weight:bold; font-size:11px; }
+    .small-note { color:#666; font-size:11px; margin-top:6px; }
   </style>
 </head>
+
 <body>
   <div id="map"></div>
 
-  <div class="panel">
-    <h3>Lot 7 AI Pest Risk Map</h3>
-    <div><b>Active Layer:</b> <span id="activeLayerLabel">Mosquito Risk</span></div>
-    <hr />
-    <div id="legendRisk">
-      <div class="legend-row"><span class="box" style="background:#2ecc71"></span> Low</div>
-      <div class="legend-row"><span class="box" style="background:#f1c40f"></span> Moderate</div>
-      <div class="legend-row"><span class="box" style="background:#e74c3c"></span> High</div>
-    </div>
-    <div id="legendULV" style="display:none;">
-      <div class="legend-row"><span class="box" style="background:#2ecc71"></span> Suitable</div>
-      <div class="legend-row"><span class="box" style="background:#f1c40f"></span> Caution</div>
-      <div class="legend-row"><span class="box" style="background:#e74c3c"></span> Suspend</div>
-    </div>
-    <hr />
-    <div style="font-size:12px; color:#555;">Click any group polygon to see details.</div>
-    <div class="status" id="status">Loading map...</div>
+  <div class="top-panel">
+    <h2>Lot 7 AI Pest Risk Map</h2>
+    <p>35 Operational Areas – Al Ain</p>
+    <p id="status">Loading map data...</p>
   </div>
 
-  <div class="controls">
-    Display layer:
-    <select id="riskType">
-      <option value="mosquito">Mosquito Risk</option>
-      <option value="fly">Fly Risk</option>
-      <option value="ulv">ULV Status</option>
-    </select>
-    <button id="refreshRisk">Refresh</button>
+  <div class="legend">
+    <div class="legend-title">Risk Color</div>
+    <div class="legend-row"><span class="box" style="background:#2e7d32"></span> Green: Low</div>
+    <div class="legend-row"><span class="box" style="background:#fbc02d"></span> Yellow: Moderate</div>
+    <div class="legend-row"><span class="box" style="background:#f57c00"></span> Orange: Elevated</div>
+    <div class="legend-row"><span class="box" style="background:#c62828"></span> Red: High / Suspend</div>
   </div>
 
 <script>
-/*
-  For local testing: keep RISK_JSON_URL = 'risk.json'
-  For SharePoint auto-update: replace risk.json with the direct download link.
-*/
-const RISK_JSON_URL = 'risk.json';
+const AREAS_GEOJSON_URL = 'areas.geojson';
+const RISK_JSON_URL = 'lot7-risk-data.json';
 
-const GROUP_LABELS = {
-  GroupA: 'Group A – Al Jahili',
-  GroupB: 'Group B – Mazyad',
-  GroupC: 'Group C – Jabal Hafeet',
-  GroupD: 'Group D – Zakhir',
-  GroupE: 'Group E – Al Wagan / Remote'
-};
+const map = L.map('map').setView([24.10, 55.75], 10);
 
-const map = L.map('map').setView([24.05, 55.65], 9);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-let currentRiskType = 'mosquito';
-let geoLayer;
-let groupsGeo;
-let labelLayer = L.layerGroup().addTo(map);
+function normalizeName(name) {
+  return String(name || '').trim().toUpperCase();
+}
 
-let riskByGroup = {
-  GroupA: { mosquito:'Low', fly:'Low', ulv:'Suspend', recommendation:'Follow weekly operational recommendations.' },
-  GroupB: { mosquito:'Low', fly:'Low', ulv:'Suspend', recommendation:'Follow weekly operational recommendations.' },
-  GroupC: { mosquito:'Low', fly:'Low', ulv:'Suspend', recommendation:'Follow weekly operational recommendations.' },
-  GroupD: { mosquito:'Low', fly:'Low', ulv:'Suspend', recommendation:'Follow weekly operational recommendations.' },
-  GroupE: { mosquito:'Low', fly:'Low', ulv:'Suspend', recommendation:'Follow weekly operational recommendations.' }
-};
+function colorFromRisk(item) {
+  const color = String(item?.map_color || '').toLowerCase();
+  const score = Number(item?.risk_score ?? 0);
 
-function normalizeRiskData(raw) {
-  const output = {};
-  ['GroupA','GroupB','GroupC','GroupD','GroupE'].forEach(group => {
-    const v = raw && raw[group];
+  if (color === 'red' || score >= 81) return '#c62828';
+  if (color === 'orange' || score >= 61) return '#f57c00';
+  if (color === 'yellow' || score >= 31) return '#fbc02d';
+  return '#2e7d32';
+}
 
-    if (typeof v === 'string') {
-      output[group] = {
-        mosquito: v || 'Low',
-        fly: 'Low',
-        ulv: 'Suspend',
-        recommendation: 'Follow weekly operational recommendations.'
+function badgeColor(value) {
+  const v = String(value || '').toLowerCase();
+  if (v.includes('high') || v.includes('suspend') || v.includes('red')) return '#c62828';
+  if (v.includes('elevated') || v.includes('orange')) return '#f57c00';
+  if (v.includes('moderate') || v.includes('caution') || v.includes('yellow')) return '#fbc02d';
+  return '#2e7d32';
+}
+
+function popupHtml(areaName, risk) {
+  if (!risk) {
+    return `
+      <div class="popup-title">${areaName}</div>
+      <div class="popup-row">No risk data available.</div>
+      <div class="small-note">Check lot7-risk-data.json area_name spelling.</div>
+    `;
+  }
+
+  return `
+    <div class="popup-title">${risk.area_name}</div>
+    <div class="popup-row"><b>Area Group:</b> ${risk.area_group}</div>
+    <div class="popup-row"><b>Mosquito Risk:</b> <span class="badge" style="background:${badgeColor(risk.mosquito_risk)}">${risk.mosquito_risk}</span></div>
+    <div class="popup-row"><b>Fly Risk:</b> <span class="badge" style="background:${badgeColor(risk.fly_risk)}">${risk.fly_risk}</span></div>
+    <div class="popup-row"><b>ULV Status:</b> <span class="badge" style="background:${badgeColor(risk.ulv_status)}">${risk.ulv_status}</span></div>
+    <div class="popup-row"><b>Risk Score:</b> ${risk.risk_score}/100</div>
+    <div class="popup-row"><b>Recommendation:</b> ${risk.recommendation || 'Routine monitoring'}</div>
+  `;
+}
+
+Promise.all([
+  fetch(AREAS_GEOJSON_URL).then(r => r.json()),
+  fetch(RISK_JSON_URL).then(r => r.json())
+]).then(([geojson, riskData]) => {
+  const riskByArea = {};
+  riskData.forEach(item => {
+    riskByArea[normalizeName(item.area_name)] = item;
+  });
+
+  const layer = L.geoJSON(geojson, {
+    style: feature => {
+      const areaName = normalizeName(feature.properties?.name);
+      const risk = riskByArea[areaName];
+      const color = colorFromRisk(risk);
+      return {
+        color: color,
+        fillColor: color,
+        weight: 2,
+        opacity: 0.95,
+        fillOpacity: 0.48
       };
-    } else if (v && typeof v === 'object') {
-      output[group] = {
-        mosquito: v.mosquito || 'Low',
-        fly: v.fly || 'Low',
-        ulv: v.ulv || 'Suitable',
-        recommendation: v.recommendation || 'Follow weekly operational recommendations.'
-      };
-    } else {
-      output[group] = {
-        mosquito: 'Low',
-        fly: 'Low',
-        ulv: 'Suitable',
-        recommendation: 'Routine monitoring.'
-      };
+    },
+    onEachFeature: (feature, layer) => {
+      const rawName = String(feature.properties?.name || '').trim();
+      const risk = riskByArea[normalizeName(rawName)];
+
+      layer.bindPopup(popupHtml(rawName, risk));
+
+      layer.on('mouseover', function () {
+        this.setStyle({ weight: 4, fillOpacity: 0.65 });
+      });
+
+      layer.on('mouseout', function () {
+        const color = colorFromRisk(risk);
+        this.setStyle({ weight: 2, fillOpacity: 0.48, color, fillColor: color });
+      });
     }
-  });
-  return output;
-}
+  }).addTo(map);
 
-function getGroupId(feature) {
-  const p = feature.properties || {};
-  const raw = (p.group || p.name || '').toString().trim();
+  map.fitBounds(layer.getBounds(), { padding: [20, 20] });
 
-  if (raw.includes('GroupA')) return 'GroupA';
-  if (raw.includes('GroupB')) return 'GroupB';
-  if (raw.includes('GroupC')) return 'GroupC';
-  if (raw.includes('GroupD')) return 'GroupD';
-  if (raw.includes('GroupE')) return 'GroupE';
+  const uniqueAreas = new Set(geojson.features.map(f => normalizeName(f.properties?.name)));
+  document.getElementById('status').innerText =
+    `Loaded ${uniqueAreas.size} areas and ${riskData.length} risk records.`;
 
-  return 'GroupE';
-}
-
-function colorByValue(value, type) {
-  const v = (value || '').toLowerCase();
-
-  if (type === 'ulv') {
-    if (v.includes('suspend')) return '#e74c3c';
-    if (v.includes('caution')) return '#f1c40f';
-    return '#2ecc71';
-  }
-
-  if (v === 'high') return '#e74c3c';
-  if (v === 'moderate') return '#f1c40f';
-  return '#2ecc71';
-}
-
-function getCurrentValue(groupId) {
-  const data = riskByGroup[groupId] || {};
-  return data[currentRiskType] || 'Low';
-}
-
-function styleFeature(feature) {
-  const groupId = getGroupId(feature);
-  const value = getCurrentValue(groupId);
-
-  return {
-    color: '#1e4620',
-    weight: 1.2,
-    fillColor: colorByValue(value, currentRiskType),
-    fillOpacity: 0.68
-  };
-}
-
-function popupContent(feature) {
-  const groupId = getGroupId(feature);
-  const data = riskByGroup[groupId] || {};
-
-  return `<b>${GROUP_LABELS[groupId] || groupId}</b><br>
-          <b>Mosquito Risk:</b> ${data.mosquito || 'Low'}<br>
-          <b>Fly Risk:</b> ${data.fly || 'Low'}<br>
-          <b>ULV Status:</b> ${data.ulv || 'Suitable'}<br>
-          <b>Recommendation:</b> ${data.recommendation || 'Follow weekly operational recommendations.'}`;
-}
-
-function refreshStyles() {
-  if (geoLayer) {
-    geoLayer.setStyle(styleFeature);
-    geoLayer.eachLayer(layer => layer.setPopupContent(popupContent(layer.feature)));
-  }
-
-  const selector = document.getElementById('riskType');
-  document.getElementById('activeLayerLabel').textContent = selector.selectedOptions[0].textContent;
-  document.getElementById('legendRisk').style.display = currentRiskType === 'ulv' ? 'none' : 'block';
-  document.getElementById('legendULV').style.display = currentRiskType === 'ulv' ? 'block' : 'none';
-
-  addLabels();
-}
-
-function getFeatureCenter(feature) {
-  let sumLat = 0, sumLng = 0, count = 0;
-
-  function walk(coords) {
-    if (typeof coords[0] === 'number') {
-      sumLng += coords[0];
-      sumLat += coords[1];
-      count++;
-    } else {
-      coords.forEach(walk);
-    }
-  }
-
-  walk(feature.geometry.coordinates);
-  return count ? [sumLat / count, sumLng / count] : [24.05, 55.65];
-}
-
-function addLabels() {
-  if (!groupsGeo) return;
-
-  labelLayer.clearLayers();
-  const byGroup = {};
-
-  groupsGeo.features.forEach(feature => {
-    const groupId = getGroupId(feature);
-    const center = getFeatureCenter(feature);
-
-    if (!byGroup[groupId]) byGroup[groupId] = { lat:0, lng:0, n:0 };
-    byGroup[groupId].lat += center[0];
-    byGroup[groupId].lng += center[1];
-    byGroup[groupId].n++;
-  });
-
-  Object.entries(byGroup).forEach(([groupId, point]) => {
-    const value = getCurrentValue(groupId);
-
-    L.marker([point.lat / point.n, point.lng / point.n], {
-      interactive: false,
-      icon: L.divIcon({
-        className: 'group-label',
-        html: `${GROUP_LABELS[groupId] || groupId}<br><span style="font-weight:400">${value}</span>`,
-        iconSize: null
-      })
-    }).addTo(labelLayer);
-  });
-}
-
-function riskUrlWithCacheBuster() {
-  const separator = RISK_JSON_URL.includes('?') ? '&' : '?';
-  return `${RISK_JSON_URL}${separator}t=${Date.now()}`;
-}
-
-async function loadRisksAndRefresh() {
-  const status = document.getElementById('status');
-
-  try {
-    status.textContent = 'Refreshing risk data...';
-
-    const response = await fetch(riskUrlWithCacheBuster());
-    if (!response.ok) throw new Error(`risk.json HTTP ${response.status}`);
-
-    const risks = await response.json();
-    riskByGroup = normalizeRiskData(risks);
-    refreshStyles();
-
-    status.textContent = 'Risk data loaded: ' + new Date().toLocaleString();
-  } catch (err) {
-    console.error(err);
-    status.textContent = 'Could not refresh risk.json. Using current/default values.';
-  }
-}
-
-async function init() {
-  const status = document.getElementById('status');
-
-  try {
-    groupsGeo = await fetch('groups_5.geojson').then(r => r.json());
-
-    geoLayer = L.geoJSON(groupsGeo, {
-      style: styleFeature,
-      onEachFeature: (feature, layer) => layer.bindPopup(popupContent(feature))
-    }).addTo(map);
-
-    map.fitBounds(geoLayer.getBounds(), { padding:[20,20] });
-    addLabels();
-    await loadRisksAndRefresh();
-  } catch (err) {
-    console.error(err);
-    status.textContent = 'Map failed to load. Open with Live Server and check files.';
-  }
-}
-
-document.getElementById('riskType').addEventListener('change', e => {
-  currentRiskType = e.target.value;
-  refreshStyles();
+}).catch(error => {
+  console.error(error);
+  document.getElementById('status').innerText = 'Error loading map data.';
 });
-
-document.getElementById('refreshRisk').addEventListener('click', () => {
-  loadRisksAndRefresh();
-});
-
-init();
 </script>
 </body>
 </html>
