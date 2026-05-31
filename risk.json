@@ -5,12 +5,12 @@
     "ulv": "Suspend"
   },
   "GroupB": {
-    "mosquito": "Low",
+    "mosquito": "Moderate",
     "fly": "Low",
     "ulv": "Suspend"
   },
   "GroupC": {
-    "mosquito": "Low",
+    "mosquito": "Moderate",
     "fly": "Low",
     "ulv": "Suspend"
   },
