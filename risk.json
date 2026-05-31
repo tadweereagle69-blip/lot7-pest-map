@@ -1,27 +1,27 @@
 {
   "GroupA": {
     "mosquito": "Moderate",
-    "fly": "Low",
-    "ulv": "Suspend"
+    "fly": "Moderate",
+    "ulv": "Caution"
   },
   "GroupB": {
     "mosquito": "Moderate",
-    "fly": "Low",
+    "fly": "Moderate",
     "ulv": "Suspend"
   },
   "GroupC": {
-    "mosquito": "Moderate",
-    "fly": "Low",
+    "mosquito": "Low",
+    "fly": "Moderate",
     "ulv": "Caution"
   },
   "GroupD": {
     "mosquito": "Moderate",
-    "fly": "Low",
-    "ulv": "Suspend"
+    "fly": "Moderate",
+    "ulv": "Suitable"
   },
   "GroupE": {
-    "mosquito": "Low",
-    "fly": "Low",
-    "ulv": "Caution"
+    "mosquito": "Moderate",
+    "fly": "Moderate",
+    "ulv": "Suitable"
   }
 }
