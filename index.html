@@ -11,18 +11,7 @@
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   />
-.panel-body::-webkit-scrollbar {
-  width: 8px;
-}
 
-.panel-body::-webkit-scrollbar-thumb {
-  background: #b8d4ea;
-  border-radius: 8px;
-}
-
-.panel-body::-webkit-scrollbar-track {
-  background: #f1f6fb;
-}
   <style>
     :root {
       --primary-blue: #0b4f8a;
@@ -96,7 +85,20 @@
   overflow-y: auto;
   max-height: calc(100vh - 300px);
 }
+    
+.panel-body::-webkit-scrollbar {
+  width: 8px;
+}
 
+.panel-body::-webkit-scrollbar-thumb {
+  background: #b8d4ea;
+  border-radius: 8px;
+}
+
+.panel-body::-webkit-scrollbar-track {
+  background: #f1f6fb;
+}
+    
     .summary-line {
       font-size: 13px;
       color: var(--muted-text);
