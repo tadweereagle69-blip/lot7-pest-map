@@ -1,7 +1,243 @@
-{
-  "GroupA": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Monitor shaded waste areas and inspect water leakage."},
-  "GroupB": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Focus sanitation around farms and organic waste areas."},
-  "GroupC": {"mosquito":"Moderate", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Inspect farms, waste sites, and standing water sources."},
-  "GroupD": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Enhance sanitation and monitor irrigation leakage."},
-  "GroupE": {"mosquito":"Low", "fly":"Moderate", "ulv":"Suspend", "recommendation":"Focus livestock zones and protected farm structures."}
-}
+<div style="max-width:700px;margin:auto;background:#fff;padding:20px;font-family:Arial,sans-serif;color:#333;border-radius:8px;box-shadow:0 0 10px rgba(0,0,0,0.1);">
+  <h2 style="background:#0057b7;color:#fff;padding:10px 15px;text-align:center;border-radius:5px;">Mosquito & Fly Operational Weather Forecast Report</h2>
+  <p style="text-align:center;font-size:14px;margin:5px 0;">
+    <strong>Report Generation Date:</strong> 2026-05-30 &nbsp;|&nbsp;
+    <strong>Forecast Period Start Date:</strong> 2026-05-31 &nbsp;|&nbsp;
+    <strong>Forecast Period End Date:</strong> 2026-06-15<br>
+    <em>Based on 16-day weather forecast from Open-Meteo</em>
+  </p>
+
+  <section style="margin-top:20px;">
+    <h3 style="color:#0057b7;border-bottom:2px solid #0057b7;padding-bottom:5px;">Forecast Windows Explanation</h3>
+    <ul style="font-size:14px;line-height:1.5;">
+      <li><strong>Window 1: Days 1 to 7</strong> - Confirmed Operational Forecast for weekly decisions including ULV vehicle suspension.</li>
+      <li><strong>Window 2: Days 8 to 16</strong> - Extended Operational Trend for planning only; must be rechecked in next weekly update before final ULV decisions.</li>
+    </ul>
+  </section>
+
+  <section style="margin-top:20px;">
+    <h3 style="color:#0057b7;border-bottom:2px solid #0057b7;padding-bottom:5px;">Operational Threshold Reference</h3>
+    <table style="width:100%;font-size:13px;border-collapse:collapse;">
+      <tbody>
+        <tr><td><strong>Temperature</strong></td><td>Below 20°C = low mosquito & fly activity;<br>20°C–35°C = favorable mosquito activity;<br>28°C–40°C = moderate fly activity potential;<br>Above 40°C + humidity &lt;30% reduces mosquito & fly activity except near shaded waste, farms, livestock, organic matter.</td></tr>
+        <tr><td><strong>Humidity</strong></td><td>Below 30% = dry, low mosquito survival;<br>30%–60% = moderate mosquito activity;<br>Above 60% = favorable mosquito breeding.</td></tr>
+        <tr><td><strong>Rain Probability</strong></td><td>0–10% = minimal breeding impact;<br>Above 30% = high breeding potential.</td></tr>
+        <tr><td><strong>Wind Speed (ULV spraying)</strong></td><td>Below 10 km/h = Suitable;<br>10–15 km/h = Use with caution;<br>Above 15 km/h = Suspend ULV operations.</td></tr>
+        <tr><td><strong>Pest Development Timing</strong></td><td>After rainfall/leakage/standing water:<br>- Mosquito larvae: 3–5 days<br>- Adult mosquitoes: 5–10 days<br>- Complaints: 7–14 days<br>Fly increase in farms/waste/livestock: 5–10 days if sanitation worsens.<br>Fly risk high only if environmental conditions support sustained breeding.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="margin-top:25px;">
+    <h3 style="color:#0057b7;border-bottom:2px solid #0057b7;padding-bottom:5px;">Section 1: Confirmed Operational Forecast (Days 1 to 7)</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#e6f0ff;">
+          <th style="border:1px solid #ccc;padding:6px;">Group</th>
+          <th style="border:1px solid #ccc;padding:6px;">Representative Area</th>
+          <th style="border:1px solid #ccc;padding:6px;">Avg Max Temp (°C)</th>
+          <th style="border:1px solid #ccc;padding:6px;">Avg Humidity (%)</th>
+          <th style="border:1px solid #ccc;padding:6px;">Avg Wind Speed (km/h)</th>
+          <th style="border:1px solid #ccc;padding:6px;">Mosquito Risk</th>
+          <th style="border:1px solid #ccc;padding:6px;">Fly Risk</th>
+          <th style="border:1px solid #ccc;padding:6px;">ULV Status</th>
+          <th style="border:1px solid #ccc;padding:6px;">Key Recommendation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A</td>
+          <td style="border:1px solid #ccc;padding:6px;">Al Jahili</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">44.0</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">30</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">18.3</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Suspend</td>
+          <td style="border:1px solid #ccc;padding:6px;">Suspend ULV due to high wind</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">B</td>
+          <td style="border:1px solid #ccc;padding:6px;">Mazyad</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">44.3</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">29</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">19.1</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Suspend</td>
+          <td style="border:1px solid #ccc;padding:6px;">Suspend ULV due to high wind</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">C</td>
+          <td style="border:1px solid #ccc;padding:6px;">Jabal Hafeet</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">39.7</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">30</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">20.1</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Moderate</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Suspend</td>
+          <td style="border:1px solid #ccc;padding:6px;">Suspend ULV; monitor mosquito activity</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">D</td>
+          <td style="border:1px solid #ccc;padding:6px;">Zakhir</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">44.2</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">31</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">22.0</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Suspend</td>
+          <td style="border:1px solid #ccc;padding:6px;">Suspend ULV due to wind</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">E</td>
+          <td style="border:1px solid #ccc;padding:6px;">Al Wagan</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">45.3</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">26</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">27.9</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Suspend</td>
+          <td style="border:1px solid #ccc;padding:6px;">Suspend ULV; high wind risk</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="margin-top:20px;">
+    <h4 style="color:#0057b7;">ULV Vehicle Suspension Advisory (Days 1 to 7)</h4>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#e6f0ff;">
+          <th style="border:1px solid #ccc;padding:6px;">Date</th>
+          <th style="border:1px solid #ccc;padding:6px;">Groups to Suspend ULV</th>
+          <th style="border:1px solid #ccc;padding:6px;">Groups with Caution</th>
+          <th style="border:1px solid #ccc;padding:6px;">Groups Suitable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-05-31</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,C,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-06-01</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,C,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-06-02</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,C,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-06-03</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,C,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-06-04</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">C</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-06-05</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">C</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">2026-06-06</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A,B,D,E</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">C</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section style="margin-top:20px;">
+    <h4 style="color:#0057b7;">Expected Pest Development and Activity Timing</h4>
+    <p style="font-size:13px;line-height:1.4;">
+      <strong>General:</strong> No rainfall or irrigation leakage forecasted; dry conditions prevail.<br><br>
+      <strong>Group A (Al Jahili):</strong> High daytime temperatures (avg 44°C) with humidity ~30% and no rain limit mosquito breeding. Mosquito larvae and adult emergence unlikely. Fly risk low due to dry conditions and lack of organic activity.<br><br>
+      <strong>Group B (Mazyad):</strong> Similar to Group A, conditions do not support mosquito or fly population increase.<br><br>
+      <strong>Group C (Jabal Hafeet):</strong> Slightly lower max temps (~39.7°C) with moderate humidity (~30%) may allow limited mosquito activity but no rainfall limits breeding. Fly risk low.<br><br>
+      <strong>Group D (Zakhir):</strong> Hot and dry with no rain; mosquito and fly development expected to remain limited.<br><br>
+      <strong>Group E (Al Wagan):</strong> Highest temperatures with low humidity and no rain; mosquito and fly activity expected to remain minimal.<br><br>
+      <em>Summary:</em> Without rainfall or increased humidity, mosquito larval or adult emergence and fly population increases are not expected during Days 1 to 7 or delayed windows.
+    </p>
+  </section>
+
+  <section style="margin-top:25px;">
+    <h3 style="color:#0057b7;border-bottom:2px solid #0057b7;padding-bottom:5px;">Section 2: Extended Operational Trend (Days 8 to 16)</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:#e6f0ff;">
+          <th style="border:1px solid #ccc;padding:6px;">Group</th>
+          <th style="border:1px solid #ccc;padding:6px;">Representative Area</th>
+          <th style="border:1px solid #ccc;padding:6px;">Trend Risk</th>
+          <th style="border:1px solid #ccc;padding:6px;">Expected Operational Concern</th>
+          <th style="border:1px solid #ccc;padding:6px;">Planning Recommendation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">A</td>
+          <td style="border:1px solid #ccc;padding:6px;">Al Jahili</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;">Continued low mosquito & fly activity</td>
+          <td style="border:1px solid #ccc;padding:6px;">Monitor humidity & wind trends</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">B</td>
+          <td style="border:1px solid #ccc;padding:6px;">Mazyad</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;">Stable low pest activity expected</td>
+          <td style="border:1px solid #ccc;padding:6px;">Plan routine sanitation</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">C</td>
+          <td style="border:1px solid #ccc;padding:6px;">Jabal Hafeet</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Moderate</td>
+          <td style="border:1px solid #ccc;padding:6px;">Possible slight mosquito activity increase</td>
+          <td style="border:1px solid #ccc;padding:6px;">Prepare for monitoring & control</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">D</td>
+          <td style="border:1px solid #ccc;padding:6px;">Zakhir</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;">No significant pest increase expected</td>
+          <td style="border:1px solid #ccc;padding:6px;">Maintain sanitation vigilance</td>
+        </tr>
+        <tr>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">E</td>
+          <td style="border:1px solid #ccc;padding:6px;">Al Wagan</td>
+          <td style="border:1px solid #ccc;padding:6px;text-align:center;">Low</td>
+          <td style="border:1px solid #ccc;padding:6px;">Stable low pest activity expected</td>
+          <td style="border:1px solid #ccc;padding:6px;">Continue routine monitoring</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;margin-top:8px;color:#555;">
+      <em>Note: Days 8 to 16 are for planning only and must be revalidated in the next weekly forecast update before final ULV decisions.</em>
+    </p>
+  </section>
+
+  <section style="margin-top:25px;background:#e6f0ff;padding:15px;border-radius:5px;">
+    <h3 style="color:#0057b7;text-align:center;margin-bottom:10px;">الملخص التنفيذي (Arabic Executive Summary)</h3>
+    <ul style="font-size:14px;line-height:1.5;list-style-type:none;padding-left:0;text-align:right;">
+      <li>• المخاطر العامة للباعوض منخفضة خلال فترة التوقعات.</li>
+      <li>• نشاط الذباب منخفض ولا يتوقع زيادة ملحوظة.</li>
+      <li>• تم تعليق عمليات الرش بالمبيدات (ULV) لجميع المجموعات خلال الأيام 1 إلى 7 بسبب سرعة الرياح العالية.</li>
+      <li>• لا يتوقع ظهور يرقات الباعوض أو زيادة في أعداد الذباب خلال فترة التوقعات أو الفترات المتأخرة.</li>
+      <li>• التوصية الرئيسية: تعليق عمليات الرش ومراقبة الظروف البيئية باستمرار.</li>
+    </ul>
+  </section>
+</div>
