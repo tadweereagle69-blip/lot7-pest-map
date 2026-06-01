@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Lot 7 AI Weather-Based Pest Risk Dashboard</title>
-
-  <!-- Leaflet CSS -->
-  <link
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  <title>Lot 7 AI Weather-Based Pest Risk Dashboard</title>  <!-- Leaflet CSS -->  <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-
-  <style>
+  />  <style>
     :root {
       --primary-blue: #0b4f8a;
       --secondary-blue: #0f6fb8;
@@ -46,22 +38,23 @@
 
     /* Main left dashboard panel */
     .control-panel {
-  position: absolute;
-  top: 18px;
-  left: 65px;
-  z-index: 1000;
-  width: 440px;
-  max-height: calc(100vh - 210px);
-  background: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 52, 89, 0.22);
-  border: 1px solid var(--border-blue);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
+      position: absolute;
+      top: 18px;
+      left: 65px;
+      z-index: 1000;
+      width: 440px;
+      max-height: calc(100vh - 210px);
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 52, 89, 0.22);
+      border: 1px solid var(--border-blue);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
 
     .panel-header {
+      position: relative;
       background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
       color: white;
       padding: 16px 18px;
@@ -80,25 +73,29 @@
       opacity: 0.94;
     }
 
-   .panel-body {
-  padding: 14px 16px 16px 16px;
-  overflow-y: auto;
-  max-height: calc(100vh - 300px);
-}
-    
-.panel-body::-webkit-scrollbar {
-  width: 8px;
-}
+    .mobile-panel-toggle {
+      display: none;
+    }
 
-.panel-body::-webkit-scrollbar-thumb {
-  background: #b8d4ea;
-  border-radius: 8px;
-}
+    .panel-body {
+      padding: 14px 16px 16px 16px;
+      overflow-y: auto;
+      max-height: calc(100vh - 300px);
+    }
 
-.panel-body::-webkit-scrollbar-track {
-  background: #f1f6fb;
-}
-    
+    .panel-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .panel-body::-webkit-scrollbar-thumb {
+      background: #b8d4ea;
+      border-radius: 8px;
+    }
+
+    .panel-body::-webkit-scrollbar-track {
+      background: #f1f6fb;
+    }
+
     .summary-line {
       font-size: 13px;
       color: var(--muted-text);
@@ -346,111 +343,201 @@
       line-height: 1.35;
     }
 
-    /* Mobile */
+    /* Mobile Bottom Sheet */
     @media (max-width: 768px) {
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+
       .control-panel {
-        width: calc(100% - 24px);
-        left: 12px;
-        top: 12px;
+        position: absolute;
+        top: auto;
+        left: 10px;
+        right: 10px;
+        bottom: 18px;
+        width: auto;
+        max-height: 48vh;
+        border-radius: 18px;
+        overflow: hidden;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.25s ease;
+      }
+
+      .control-panel.collapsed {
+        transform: translateY(calc(100% - 72px));
+      }
+
+      .panel-header {
+        padding: 14px 16px;
+        cursor: pointer;
+      }
+
+      .panel-header h2 {
+        font-size: 18px;
+        line-height: 1.25;
+        padding-right: 70px;
+      }
+
+      .panel-header p {
+        font-size: 12px;
+        padding-right: 70px;
+      }
+
+      .mobile-panel-toggle {
+        display: block;
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: auto;
+        padding: 7px 10px;
+        margin: 0;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.18);
+        color: #ffffff;
+        border: 1px solid rgba(255,255,255,0.35);
+        font-size: 11px;
+        font-weight: bold;
+        z-index: 1002;
+      }
+
+      .panel-body {
+        padding: 12px 14px;
+        max-height: calc(48vh - 95px);
+        overflow-y: auto;
+      }
+
+      .summary-line {
+        font-size: 12px;
+        margin-bottom: 8px;
       }
 
       .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .kpi-card {
+        padding: 8px 5px;
+      }
+
+      .kpi-card .number {
+        font-size: 20px;
+      }
+
+      .kpi-card .label {
+        font-size: 11px;
+      }
+
+      select {
+        font-size: 13px;
+        padding: 9px;
+      }
+
+      button {
+        padding: 10px;
+        font-size: 13px;
+      }
+
+      .top-risk-panel h3 {
+        font-size: 14px;
+      }
+
+      .top-risk-item {
+        grid-template-columns: 1fr 38px 70px;
+        font-size: 12px;
+        padding: 6px 0;
       }
 
       .legend-box,
       .status-box {
         display: none;
       }
+
+      .leaflet-control-zoom {
+        display: none;
+      }
     }
-  </style>
-</head>
-
-<body>
-  <div id="map"></div>
-
-  <!-- Left control panel -->
-  <div class="control-panel">
+  </style></head><body>
+  <div id="map"></div>  <!-- Left control panel -->  <div class="control-panel">
     <div class="panel-header">
-      <h2>Lot 7 AI Weather-Based Pest Risk Dashboard</h2>
-      <p>35 Operational Areas – Al Ain | Open-Meteo + AI Risk Rules</p>
+      <button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">
+        Hide
+      </button>  <h2>Lot 7 AI Weather-Based Pest Risk Dashboard</h2>
+  <p>35 Operational Areas – Al Ain | Open-Meteo + AI Risk Rules</p>
+</div>
+
+<div class="panel-body">
+  <div class="summary-line" id="summaryLine">
+    Loading operational areas and risk records...
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="number" id="areasCount">0</div>
+      <div class="label">Areas</div>
     </div>
 
-    <div class="panel-body">
-      <div class="summary-line" id="summaryLine">
-        Loading operational areas and risk records...
-      </div>
+    <div class="kpi-card attention">
+      <div class="number" id="needAttentionCount">0</div>
+      <div class="label">Need Attention</div>
+    </div>
 
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="number" id="areasCount">0</div>
-          <div class="label">Areas</div>
-        </div>
+    <div class="kpi-card suspend">
+      <div class="number" id="ulvSuspendCount">0</div>
+      <div class="label">ULV Suspend</div>
+    </div>
 
-        <div class="kpi-card attention">
-          <div class="number" id="needAttentionCount">0</div>
-          <div class="label">Need Attention</div>
-        </div>
-
-        <div class="kpi-card suspend">
-          <div class="number" id="ulvSuspendCount">0</div>
-          <div class="label">ULV Suspend</div>
-        </div>
-
-        <div class="kpi-card routine">
-          <div class="number" id="routineCount">0</div>
-          <div class="label">Routine</div>
-        </div>
-      </div>
-
-      <select id="areaSelect">
-        <option value="">Select Area / اختر المنطقة</option>
-      </select>
-
-      <button class="btn-primary" onclick="zoomToSelectedArea()">
-        Zoom to Selected Area
-      </button>
-
-      <button class="btn-secondary" onclick="showAllAreas()">
-        Show All Areas
-      </button>
-
-      <div class="top-risk-panel">
-        <h3>Top Risk Areas</h3>
-        <div id="topRiskAreasList">
-          Loading...
-        </div>
-      </div>
+    <div class="kpi-card routine">
+      <div class="number" id="routineCount">0</div>
+      <div class="label">Routine</div>
     </div>
   </div>
 
-  <!-- Legend -->
-  <div class="legend-box">
-    <h3>Risk Classification</h3>
+  <select id="areaSelect">
+    <option value="">Select Area / اختر المنطقة</option>
+  </select>
 
-    <div class="legend-row">
-      <div class="legend-color" style="background:#2e7d32;"></div>
-      <span>Green: Routine / Low</span>
-    </div>
+  <button class="btn-primary" onclick="zoomToSelectedArea()">
+    Zoom to Selected Area
+  </button>
 
-    <div class="legend-row">
-      <div class="legend-color" style="background:#fbc02d;"></div>
-      <span>Amber: Moderate / Monitor</span>
-    </div>
+  <button class="btn-secondary" onclick="showAllAreas()">
+    Show All Areas
+  </button>
 
-    <div class="legend-row">
-      <div class="legend-color" style="background:#ef7d00;"></div>
-      <span>Orange: Elevated / Need Attention</span>
-    </div>
-
-    <div class="legend-row">
-      <div class="legend-color" style="background:#c62828;"></div>
-      <span>Red: High / ULV Suspend</span>
+  <div class="top-risk-panel">
+    <h3>Top Risk Areas</h3>
+    <div id="topRiskAreasList">
+      Loading...
     </div>
   </div>
+</div>
 
-  <!-- Status box -->
-  <div class="status-box">
+  </div>  <!-- Legend -->  <div class="legend-box">
+    <h3>Risk Classification</h3><div class="legend-row">
+  <div class="legend-color" style="background:#2e7d32;"></div>
+  <span>Green: Routine / Low</span>
+</div>
+
+<div class="legend-row">
+  <div class="legend-color" style="background:#fbc02d;"></div>
+  <span>Amber: Moderate / Monitor</span>
+</div>
+
+<div class="legend-row">
+  <div class="legend-color" style="background:#ef7d00;"></div>
+  <span>Orange: Elevated / Need Attention</span>
+</div>
+
+<div class="legend-row">
+  <div class="legend-color" style="background:#c62828;"></div>
+  <span>Red: High / ULV Suspend</span>
+</div>
+
+  </div>  <!-- Status box -->  <div class="status-box">
     <h3>Map Update Status</h3>
     <p><strong>Data File:</strong> lot7-risk-data.json</p>
     <p><strong>Last Updated:</strong> <span id="lastUpdated">Loading...</span></p>
@@ -460,12 +547,7 @@
       This map is updated from the latest weather-based pest risk assessment.
       It supports operational planning and does not replace field inspection findings.
     </div>
-  </div>
-
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <script>
+  </div>  <!-- Leaflet JS -->  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>  <script>
     let map;
     let geojsonLayer;
     let areasGeoJson;
@@ -594,14 +676,14 @@
 
     function createRiskLookup(data) {
       const lookup = {};
-
       let records = [];
 
-if (Array.isArray(data)) {
-  records = data;
-} else {
-  records = data?.areas || data?.risk_records || data?.records || [];
-}
+      if (Array.isArray(data)) {
+        records = data;
+      } else {
+        records = data?.areas || data?.risk_records || data?.records || [];
+      }
+
       records.forEach(item => {
         const areaName =
           item.area_name ||
@@ -616,13 +698,14 @@ if (Array.isArray(data)) {
       return lookup;
     }
 
-function getRiskRecords() {
-  if (Array.isArray(riskData)) {
-    return riskData;
-  }
+    function getRiskRecords() {
+      if (Array.isArray(riskData)) {
+        return riskData;
+      }
 
-  return riskData?.areas || riskData?.risk_records || riskData?.records || [];
-}
+      return riskData?.areas || riskData?.risk_records || riskData?.records || [];
+    }
+
     // Load files
     async function loadData() {
       try {
@@ -854,12 +937,28 @@ function getRiskRecords() {
       }
     }
 
+    function toggleMobilePanel(event) {
+      if (event) {
+        event.stopPropagation();
+      }
+
+      const panel = document.querySelector('.control-panel');
+      const button = document.querySelector('.mobile-panel-toggle');
+
+      panel.classList.toggle('collapsed');
+
+      if (panel.classList.contains('collapsed')) {
+        button.textContent = 'Show';
+      } else {
+        button.textContent = 'Hide';
+      }
+    }
+
     // Auto refresh every 30 minutes
     loadData();
 
     setInterval(() => {
       loadData();
     }, 30 * 60 * 1000);
-  </script>
-</body>
+  </script></body>
 </html>
