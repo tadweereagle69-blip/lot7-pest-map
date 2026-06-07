@@ -523,11 +523,68 @@
     }).addTo(map);
 
     function normalizeName(name) {
-      return String(name || '')
+      let n = String(name || '')
         .trim()
         .toUpperCase()
         .replace(/\s+/g, ' ')
-        .replace(/[’‘]/g, "'");
+        .replace(/[’‘]/g, "'")
+        .replace(/-/g, ' ');
+
+      const aliases = {
+        "AL SHUWAYMAH": "AL SHUWAIMAH",
+        "AL SHUWAIMA": "AL SHUWAIMAH",
+        "AL SHUWAIYMAH": "AL SHUWAIMAH",
+
+        "AL MU'TARID": "AL MUTARID",
+        "AL MU’TARID": "AL MUTARID",
+        "AL MUTARID": "AL MUTARID",
+
+        "ZAKHER": "ZAKHIR",
+        "ZAKIR": "ZAKHIR",
+
+        "BU KIRIYYAH": "BU KIRAYYAH",
+        "BU KIRAYYAH": "BU KIRAYYAH",
+        "BU KIRAYAH": "BU KIRAYYAH",
+
+        "ABU HUREIBAH": "ABU HIRAYBAH",
+        "ABU HIRAYBAH": "ABU HIRAYBAH",
+
+        "UMM GHAFAH": "UM GHAFAH",
+        "UM GHAFAH": "UM GHAFAH",
+
+        "UMM AL ZUMOUL": "UM AL ZUMOUL",
+        "UM AL ZUMOUL": "UM AL ZUMOUL",
+
+        "AL QOU'": "AL QOU",
+        "AL QOU": "AL QOU",
+
+        "AL A'RAD": "AL A'RAD",
+        "AL ARAD": "AL A'RAD",
+
+        "AL QISEES": "AL QISEES",
+        "AL QISAYS": "AL QISEES",
+        "AL QISSAIS": "AL QISEES",
+
+        "FALAJ HAZZA": "FALAJ HAZZA'",
+        "FALAJ HAZZA'": "FALAJ HAZZA'",
+
+        "SHI'BAT AL WUTAH": "SHI'BAT AL WUTAH",
+        "SHIBAT AL WUTAH": "SHI'BAT AL WUTAH",
+
+        "AIN AL FAYDA": "AIN AL FAYDAH",
+        "AIN AL FAYDAH": "AIN AL FAYDAH",
+
+        "MBAZZARAH AL KHADRA": "MBAZZARAH AL KHADRA",
+        "MBAZZARAH AL KHADRAH": "MBAZZARAH AL KHADRA",
+
+        "AL DHAHIR": "AL DHAHIR",
+        "AL DAHIR": "AL DHAHIR",
+
+        "AL MUTAWAH": "AL MUTAWAH",
+        "AL MUTAWA": "AL MUTAWAH"
+      };
+
+      return aliases[n] || n;
     }
 
     function normalizeColor(color) {
