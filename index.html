@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Lot 7 AI Mosquito Fly ULV Dashboard</title>
+  <title>Lot 7 AI Mosquito Fly ULV Daily Dashboard</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -118,7 +118,7 @@
     .kpi-card.fly .number { color:var(--orange); }
     .kpi-card.ulv .number { color:var(--red); }
 
-    .view-section-title {
+    .section-title {
       margin:10px 0 7px 0;
       font-size:13px;
       font-weight:bold;
@@ -215,30 +215,11 @@
       text-align:center;
     }
 
-    .badge-green {
-      background:#e6f4ea;
-      color:var(--green);
-    }
-
-    .badge-amber {
-      background:#fff8df;
-      color:#9a6a00;
-    }
-
-    .badge-orange {
-      background:#fff0df;
-      color:var(--orange);
-    }
-
-    .badge-red {
-      background:#fdecea;
-      color:var(--red);
-    }
-
-    .badge-grey {
-      background:#f1f5f9;
-      color:#475569;
-    }
+    .badge-green { background:#e6f4ea; color:var(--green); }
+    .badge-amber { background:#fff8df; color:#9a6a00; }
+    .badge-orange { background:#fff0df; color:var(--orange); }
+    .badge-red { background:#fdecea; color:var(--red); }
+    .badge-grey { background:#f1f5f9; color:#475569; }
 
     .legend-box {
       position:absolute;
@@ -315,7 +296,7 @@
 
     .leaflet-popup-content {
       margin:12px 14px;
-      min-width:250px;
+      min-width:260px;
     }
 
     .popup-title {
@@ -328,10 +309,6 @@
     .popup-row {
       margin:5px 0;
       font-size:13px;
-    }
-
-    .popup-row strong {
-      color:#263238;
     }
 
     .popup-recommendation {
@@ -364,7 +341,7 @@
         right:10px;
         bottom:18px;
         width:auto;
-        max-height:52vh;
+        max-height:58vh;
       }
 
       .control-panel.collapsed {
@@ -398,10 +375,6 @@
         grid-template-columns:1fr;
       }
 
-      .kpi-grid {
-        grid-template-columns:repeat(3,1fr);
-      }
-
       .legend-box,
       .status-box,
       .leaflet-control-zoom {
@@ -417,14 +390,12 @@
   <div class="control-panel">
     <div class="panel-header">
       <button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">Hide</button>
-      <h2>Lot 7 AI Pest Risk Dashboard</h2>
-      <p>View Mode: Mosquito • Fly • ULV / Wind</p>
+      <h2>Lot 7 AI Daily Pest Dashboard</h2>
+      <p>Forecast Day + Mosquito • Fly • ULV / Wind</p>
     </div>
 
     <div class="panel-body">
-      <div class="summary-line" id="summaryLine">
-        Loading dashboard data...
-      </div>
+      <div class="summary-line" id="summaryLine">Loading dashboard data...</div>
 
       <div class="kpi-grid">
         <div class="kpi-card mosquito">
@@ -443,39 +414,36 @@
         </div>
       </div>
 
-      <div class="view-section-title">View Mode</div>
+      <div class="section-title">Forecast Day</div>
+
+      <select id="daySelect" onchange="setSelectedDay()">
+        <option value="1">Today / Day 1</option>
+        <option value="2">Tomorrow / Day 2</option>
+        <option value="3">Day 3</option>
+        <option value="4">Day 4</option>
+        <option value="5">Day 5</option>
+        <option value="6">Day 6</option>
+        <option value="7">Day 7</option>
+      </select>
+
+      <div class="section-title">View Mode</div>
 
       <div class="view-grid">
-        <button class="view-btn active" data-mode="mosquito" onclick="setViewMode('mosquito')">
-          Mosquito
-        </button>
-
-        <button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">
-          Fly
-        </button>
-
-        <button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">
-          ULV / Wind
-        </button>
+        <button class="view-btn active" data-mode="mosquito" onclick="setViewMode('mosquito')">Mosquito</button>
+        <button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">Fly</button>
+        <button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">ULV / Wind</button>
       </div>
 
       <select id="areaSelect">
         <option value="">Select Area / اختر المنطقة</option>
       </select>
 
-      <button class="main-btn btn-primary" onclick="zoomToSelectedArea()">
-        Zoom to Selected Area
-      </button>
-
-      <button class="main-btn btn-secondary" onclick="showAllAreas()">
-        Show All Areas
-      </button>
+      <button class="main-btn btn-primary" onclick="zoomToSelectedArea()">Zoom to Selected Area</button>
+      <button class="main-btn btn-secondary" onclick="showAllAreas()">Show All Areas</button>
 
       <div class="top-risk-panel">
         <h3 id="topListTitle">Top Mosquito Risk Areas</h3>
-        <div id="topRiskAreasList">
-          Loading...
-        </div>
+        <div id="topRiskAreasList">Loading...</div>
       </div>
     </div>
   </div>
@@ -490,9 +458,10 @@
     <p><strong>Data File:</strong> lot7-risk-data.json</p>
     <p><strong>Last Updated:</strong> <span id="lastUpdated">Loading...</span></p>
     <p><strong>Forecast Period:</strong> <span id="forecastPeriod">Loading...</span></p>
+    <p><strong>Selected Day:</strong> <span id="selectedDayText">Day 1</span></p>
     <p><strong>Data Source:</strong> Open-Meteo + AI Risk Rules</p>
     <div class="status-note" id="statusNote">
-      Use the buttons to switch between Mosquito Risk, Fly Risk, and ULV/Wind suitability.
+      Select a forecast day, then switch between Mosquito, Fly, and ULV/Wind.
     </div>
   </div>
 
@@ -505,6 +474,7 @@
     let riskData;
     let areaLayers = {};
     let currentMode = 'mosquito';
+    let selectedDay = 1;
 
     const COLOR_HEX = {
       Green: '#2e7d32',
@@ -534,53 +504,24 @@
         "AL SHUWAYMAH": "AL SHUWAIMAH",
         "AL SHUWAIMA": "AL SHUWAIMAH",
         "AL SHUWAIYMAH": "AL SHUWAIMAH",
-
         "AL MU'TARID": "AL MUTARID",
         "AL MU’TARID": "AL MUTARID",
-        "AL MUTARID": "AL MUTARID",
-
         "ZAKHER": "ZAKHIR",
         "ZAKIR": "ZAKHIR",
-
         "BU KIRIYYAH": "BU KIRAYYAH",
-        "BU KIRAYYAH": "BU KIRAYYAH",
         "BU KIRAYAH": "BU KIRAYYAH",
-
         "ABU HUREIBAH": "ABU HIRAYBAH",
-        "ABU HIRAYBAH": "ABU HIRAYBAH",
-
         "UMM GHAFAH": "UM GHAFAH",
-        "UM GHAFAH": "UM GHAFAH",
-
         "UMM AL ZUMOUL": "UM AL ZUMOUL",
-        "UM AL ZUMOUL": "UM AL ZUMOUL",
-
         "AL QOU'": "AL QOU",
-        "AL QOU": "AL QOU",
-
-        "AL A'RAD": "AL A'RAD",
         "AL ARAD": "AL A'RAD",
-
-        "AL QISEES": "AL QISEES",
         "AL QISAYS": "AL QISEES",
         "AL QISSAIS": "AL QISEES",
-
         "FALAJ HAZZA": "FALAJ HAZZA'",
-        "FALAJ HAZZA'": "FALAJ HAZZA'",
-
-        "SHI'BAT AL WUTAH": "SHI'BAT AL WUTAH",
         "SHIBAT AL WUTAH": "SHI'BAT AL WUTAH",
-
         "AIN AL FAYDA": "AIN AL FAYDAH",
-        "AIN AL FAYDAH": "AIN AL FAYDAH",
-
-        "MBAZZARAH AL KHADRA": "MBAZZARAH AL KHADRA",
         "MBAZZARAH AL KHADRAH": "MBAZZARAH AL KHADRA",
-
-        "AL DHAHIR": "AL DHAHIR",
         "AL DAHIR": "AL DHAHIR",
-
-        "AL MUTAWAH": "AL MUTAWAH",
         "AL MUTAWA": "AL MUTAWAH"
       };
 
@@ -654,8 +595,22 @@
       return lookup;
     }
 
+    function getDailyItem(item) {
+      if (!item) return null;
+
+      if (Array.isArray(item.daily_7)) {
+        const found = item.daily_7.find(d => Number(d.day) === Number(selectedDay));
+
+        if (found) return found;
+      }
+
+      return item;
+    }
+
     function getModeInfo(item) {
-      if (!item) {
+      const dayItem = getDailyItem(item);
+
+      if (!dayItem) {
         return {
           score: 0,
           label: 'No Data',
@@ -666,26 +621,26 @@
 
       if (currentMode === 'fly') {
         return {
-          score: Number(item.fly_score ?? 0),
-          label: item.fly_risk || 'Low',
-          color: item.fly_color || 'Green',
+          score: Number(dayItem.fly_score ?? item.fly_score ?? 0),
+          label: dayItem.fly_risk || item.fly_risk || 'Low',
+          color: dayItem.fly_color || item.fly_color || 'Green',
           visible: true
         };
       }
 
       if (currentMode === 'ulv') {
         return {
-          score: Number(item.wind_speed_max ?? 0),
-          label: item.ulv_status || 'Suitable',
-          color: item.ulv_color || 'Green',
+          score: Number(dayItem.wind_speed_max ?? item.wind_speed_max ?? 0),
+          label: dayItem.ulv_status || item.ulv_status || 'Suitable',
+          color: dayItem.ulv_color || item.ulv_color || 'Green',
           visible: true
         };
       }
 
       return {
-        score: Number(item.mosquito_score ?? 0),
-        label: item.mosquito_risk || 'Low',
-        color: item.mosquito_color || 'Green',
+        score: Number(dayItem.mosquito_score ?? item.mosquito_score ?? 0),
+        label: dayItem.mosquito_risk || item.mosquito_risk || 'Low',
+        color: dayItem.mosquito_color || item.mosquito_color || 'Green',
         visible: true
       };
     }
@@ -758,20 +713,27 @@
         `;
       }
 
-      const mosquitoRisk = item.mosquito_risk || 'Low';
-      const mosquitoScore = item.mosquito_score ?? 0;
+      const dayItem = getDailyItem(item) || item;
 
-      const flyRisk = item.fly_risk || 'Low';
-      const flyScore = item.fly_score ?? 0;
+      const mosquitoRisk = dayItem.mosquito_risk || item.mosquito_risk || 'Low';
+      const mosquitoScore = dayItem.mosquito_score ?? item.mosquito_score ?? 0;
 
-      const ulvStatus = item.ulv_status || 'Suitable';
-      const windMax = item.wind_speed_max ?? 'N/A';
-      const windGust = item.wind_gust_max ?? 'N/A';
+      const flyRisk = dayItem.fly_risk || item.fly_risk || 'Low';
+      const flyScore = dayItem.fly_score ?? item.fly_score ?? 0;
 
-      const recommendation = item.recommendation || 'Routine monitoring';
+      const ulvStatus = dayItem.ulv_status || item.ulv_status || 'Suitable';
+      const windMax = dayItem.wind_speed_max ?? item.wind_speed_max ?? 'N/A';
+      const windGust = dayItem.wind_gust_max ?? item.wind_gust_max ?? 'N/A';
+
+      const recommendation = dayItem.recommendation || item.recommendation || 'Routine monitoring';
+      const dateText = dayItem.date || 'Selected forecast day';
 
       return `
         <div class="popup-title">${areaName}</div>
+
+        <div class="popup-row">
+          <strong>Forecast Day:</strong> Day ${selectedDay} - ${dateText}
+        </div>
 
         <div class="popup-row">
           <strong>Mosquito Risk:</strong> ${mosquitoRisk} (${mosquitoScore})
@@ -799,7 +761,7 @@
         </div>
 
         <div class="popup-note">
-          Current view: ${getModeTitle()}. Mosquito, Fly, and ULV/Wind are shown separately.
+          Current view: ${getModeTitle()}. Mosquito, Fly, and ULV/Wind are shown separately by selected day.
         </div>
       `;
     }
@@ -824,19 +786,18 @@
       const totalAreas = riskData.totalAreas || riskData.total_areas || 35;
 
       const mosquitoAttention = records.filter(item => {
-        const score = Number(item.mosquito_score ?? 0);
-        const color = normalizeColor(item.mosquito_color || 'Green');
-        return score >= 50 || color === 'Amber' || color === 'Orange' || color === 'Red';
+        const info = getModeSpecificInfo(item, 'mosquito');
+        return info.score >= 50 || ['Amber', 'Orange', 'Red'].includes(normalizeColor(info.color));
       }).length;
 
       const flyAttention = records.filter(item => {
-        const score = Number(item.fly_score ?? 0);
-        const color = normalizeColor(item.fly_color || 'Green');
-        return score >= 50 || color === 'Amber' || color === 'Orange' || color === 'Red';
+        const info = getModeSpecificInfo(item, 'fly');
+        return info.score >= 50 || ['Amber', 'Orange', 'Red'].includes(normalizeColor(info.color));
       }).length;
 
       const ulvSuspend = records.filter(item => {
-        return item.ulv_suspend === true || String(item.ulv_status || '').toUpperCase().includes('SUSPEND');
+        const dayItem = getDailyItem(item) || item;
+        return dayItem.ulv_suspend === true || String(dayItem.ulv_status || '').toUpperCase().includes('SUSPEND');
       }).length;
 
       document.getElementById('mosquitoAttentionCount').textContent = mosquitoAttention;
@@ -844,10 +805,20 @@
       document.getElementById('ulvSuspendCount').textContent = ulvSuspend;
 
       document.getElementById('summaryLine').textContent =
-        `Loaded ${totalAreas} areas. Current view: ${getModeTitle()}.`;
+        `Loaded ${totalAreas} areas. Day ${selectedDay}. Current view: ${getModeTitle()}.`;
+
+      document.getElementById('selectedDayText').textContent = `Day ${selectedDay}`;
 
       updateLegend();
       updateTopList(records);
+    }
+
+    function getModeSpecificInfo(item, mode) {
+      const previousMode = currentMode;
+      currentMode = mode;
+      const info = getModeInfo(item);
+      currentMode = previousMode;
+      return info;
     }
 
     function updateTopList(records) {
@@ -908,7 +879,7 @@
       const rows = document.getElementById('legendRows');
       const note = document.getElementById('statusNote');
 
-      title.textContent = getModeTitle() + ' Classification';
+      title.textContent = getModeTitle() + ' - Day ' + selectedDay;
 
       if (currentMode === 'ulv') {
         rows.innerHTML = `
@@ -929,7 +900,7 @@
         `;
 
         note.textContent =
-          'ULV / Wind view shows spraying suitability based on wind speed. It does not confirm infestation.';
+          'ULV / Wind view shows spraying suitability for the selected day. It does not confirm infestation.';
 
         return;
       }
@@ -957,7 +928,7 @@
       `;
 
       note.textContent =
-        'Use the buttons to switch between Mosquito Risk, Fly Risk, and ULV/Wind suitability.';
+        'Select a forecast day, then switch between Mosquito Risk, Fly Risk, and ULV/Wind suitability.';
     }
 
     function setViewMode(mode) {
@@ -966,6 +937,15 @@
       document.querySelectorAll('.view-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.mode === mode);
       });
+
+      if (areasGeoJson && riskData) {
+        buildMap();
+        updateDashboard();
+      }
+    }
+
+    function setSelectedDay() {
+      selectedDay = Number(document.getElementById('daySelect').value || 1);
 
       if (areasGeoJson && riskData) {
         buildMap();
