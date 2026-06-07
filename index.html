@@ -34,11 +34,11 @@
     <div class="panel-header"><button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">Hide</button><h2>Lot 7 AI Daily Pest Dashboard</h2><p>Forecast Day + Mosquito • Fly • ULV / Wind</p></div>
     <div class="panel-body">
       <div class="summary-line" id="summaryLine">Loading dashboard data...</div>
-      <div class="kpi-grid"><div class="kpi-card mosquito"><div class="number" id="mosquitoAttentionCount">0</div><div class="label">Mosquito</div></div><div class="kpi-card fly"><div class="number" id="flyAttentionCount">0</div><div class="label">Fly</div></div><div class="kpi-card ulv"><div class="number" id="ulvSuspendCount">0</div><div class="label">ULV Suspend</div></div></div>
+      <div class="kpi-grid"><div class="kpi-card mosquito"><div class="number" id="mosquitoAttentionCount">0</div><div class="label">Mosquito</div></div><div class="kpi-card fly"><div class="number" id="flyAttentionCount">0</div><div class="label">Fly Watch</div></div><div class="kpi-card ulv"><div class="number" id="ulvSuspendCount">0</div><div class="label">ULV Suspend</div></div></div>
       <div class="section-title">Forecast Day</div>
       <select id="daySelect" onchange="setSelectedDay()"><option value="1">Today / Day 1</option><option value="2">Tomorrow / Day 2</option><option value="3">Day 3</option><option value="4">Day 4</option><option value="5">Day 5</option><option value="6">Day 6</option><option value="7">Day 7</option></select>
       <div class="section-title">View Mode</div>
-      <div class="view-grid"><button class="view-btn active" data-mode="mosquito" onclick="setViewMode('mosquito')">Mosquito</button><button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">Fly</button><button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">ULV / Wind</button></div>
+      <div class="view-grid"><button class="view-btn active" data-mode="mosquito" onclick="setViewMode('mosquito')">Mosquito</button><button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">Fly Watch</button><button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">ULV / Wind</button></div>
       <button class="toggle-box-btn" onclick="toggleBox('appearanceCard','appearanceIcon')"><span>Expected Pest Appearance Window</span><span class="toggle-icon" id="appearanceIcon">+</span></button>
       <div class="appearance-card collapsed-card hidden-box" id="appearanceCard">
         <h3>Expected Pest Appearance Window</h3>
