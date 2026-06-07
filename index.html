@@ -1,10 +1,18 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  <title>Lot 7 AI Weather-Based Pest Risk Dashboard</title>  <!-- Leaflet CSS -->  <link
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Lot 7 AI Pest Risk & Operational Priority Dashboard</title>
+
+  <!-- Leaflet CSS -->
+  <link
     rel="stylesheet"
     href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />  <style>
+  />
+
+  <style>
     :root {
       --primary-blue: #0b4f8a;
       --secondary-blue: #0f6fb8;
@@ -36,7 +44,6 @@
       width: 100%;
     }
 
-    /* Main left dashboard panel */
     .control-panel {
       position: absolute;
       top: 18px;
@@ -180,7 +187,6 @@
       border: 1px solid var(--border-blue);
     }
 
-    /* Top risk panel */
     .top-risk-panel {
       margin-top: 10px;
       border-top: 1px solid #dbe8f3;
@@ -241,7 +247,6 @@
       color: var(--risk-red);
     }
 
-    /* Legend */
     .legend-box {
       position: absolute;
       bottom: 28px;
@@ -253,7 +258,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
       border: 1px solid var(--border-blue);
       font-size: 13px;
-      width: 245px;
+      width: 280px;
     }
 
     .legend-box h3 {
@@ -276,13 +281,12 @@
       border: 1px solid rgba(0, 0, 0, 0.12);
     }
 
-    /* Bottom right status */
     .status-box {
       position: absolute;
       right: 18px;
       bottom: 28px;
       z-index: 1000;
-      width: 350px;
+      width: 370px;
       background: white;
       border-radius: 14px;
       padding: 14px 16px;
@@ -306,9 +310,12 @@
       color: var(--muted-text);
       font-size: 12px;
       line-height: 1.35;
+      background: #fff8e1;
+      border-left: 4px solid #fbc02d;
+      padding: 8px;
+      border-radius: 6px;
     }
 
-    /* Popup */
     .leaflet-popup-content-wrapper {
       border-radius: 12px;
     }
@@ -343,7 +350,16 @@
       line-height: 1.35;
     }
 
-    /* Mobile Bottom Sheet */
+    .popup-note {
+      margin-top: 8px;
+      padding: 7px;
+      background: #fff8e1;
+      border-left: 4px solid #fbc02d;
+      font-size: 11.5px;
+      line-height: 1.35;
+      color: #5f4b00;
+    }
+
     @media (max-width: 768px) {
       #map {
         height: 100vh;
@@ -460,101 +476,117 @@
         display: none;
       }
     }
-  </style></head><body>
-  <div id="map"></div>  <!-- Left control panel -->  <div class="control-panel">
+  </style>
+</head>
+
+<body>
+  <div id="map"></div>
+
+  <div class="control-panel">
     <div class="panel-header">
       <button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">
         Hide
-      </button>  <h2>Lot 7 AI Weather-Based Pest Risk Dashboard</h2>
-  <p>35 Operational Areas – Al Ain | Open-Meteo + AI Risk Rules</p>
-</div>
+      </button>
 
-<div class="panel-body">
-  <div class="summary-line" id="summaryLine">
-    Loading operational areas and risk records...
+      <h2>Lot 7 AI Pest Risk & Operational Priority Dashboard</h2>
+      <p>35 Operational Areas – Al Ain | Open-Meteo + AI Operational Priority Rules</p>
+    </div>
+
+    <div class="panel-body">
+      <div class="summary-line" id="summaryLine">
+        Loading operational areas and priority records...
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="number" id="areasCount">0</div>
+          <div class="label">Areas</div>
+        </div>
+
+        <div class="kpi-card attention">
+          <div class="number" id="needAttentionCount">0</div>
+          <div class="label">Need Attention</div>
+        </div>
+
+        <div class="kpi-card suspend">
+          <div class="number" id="ulvSuspendCount">0</div>
+          <div class="label">ULV Suspend</div>
+        </div>
+
+        <div class="kpi-card routine">
+          <div class="number" id="routineCount">0</div>
+          <div class="label">Routine</div>
+        </div>
+      </div>
+
+      <select id="areaSelect">
+        <option value="">Select Area / اختر المنطقة</option>
+      </select>
+
+      <button class="btn-primary" onclick="zoomToSelectedArea()">
+        Zoom to Selected Area
+      </button>
+
+      <button class="btn-secondary" onclick="showAllAreas()">
+        Show All Areas
+      </button>
+
+      <div class="top-risk-panel">
+        <h3>Top Operational Priority Areas</h3>
+        <div id="topRiskAreasList">
+          Loading...
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="kpi-grid">
-    <div class="kpi-card">
-      <div class="number" id="areasCount">0</div>
-      <div class="label">Areas</div>
+  <div class="legend-box">
+    <h3>Operational Priority Classification</h3>
+
+    <div class="legend-row">
+      <div class="legend-color" style="background:#2e7d32;"></div>
+      <span>Green: Routine Monitoring</span>
     </div>
 
-    <div class="kpi-card attention">
-      <div class="number" id="needAttentionCount">0</div>
-      <div class="label">Need Attention</div>
+    <div class="legend-row">
+      <div class="legend-color" style="background:#fbc02d;"></div>
+      <span>Amber: Moderate Operational Priority</span>
     </div>
 
-    <div class="kpi-card suspend">
-      <div class="number" id="ulvSuspendCount">0</div>
-      <div class="label">ULV Suspend</div>
+    <div class="legend-row">
+      <div class="legend-color" style="background:#ef7d00;"></div>
+      <span>Orange: Elevated Operational Priority</span>
     </div>
 
-    <div class="kpi-card routine">
-      <div class="number" id="routineCount">0</div>
-      <div class="label">Routine</div>
-    </div>
-  </div>
-
-  <select id="areaSelect">
-    <option value="">Select Area / اختر المنطقة</option>
-  </select>
-
-  <button class="btn-primary" onclick="zoomToSelectedArea()">
-    Zoom to Selected Area
-  </button>
-
-  <button class="btn-secondary" onclick="showAllAreas()">
-    Show All Areas
-  </button>
-
-  <div class="top-risk-panel">
-    <h3>Top Risk Areas</h3>
-    <div id="topRiskAreasList">
-      Loading...
+    <div class="legend-row">
+      <div class="legend-color" style="background:#c62828;"></div>
+      <span>Red: High Operational Priority / ULV Suspend</span>
     </div>
   </div>
-</div>
 
-  </div>  <!-- Legend -->  <div class="legend-box">
-    <h3>Risk Classification</h3><div class="legend-row">
-  <div class="legend-color" style="background:#2e7d32;"></div>
-  <span>Green: Routine / Low</span>
-</div>
-
-<div class="legend-row">
-  <div class="legend-color" style="background:#fbc02d;"></div>
-  <span>Amber: Moderate / Monitor</span>
-</div>
-
-<div class="legend-row">
-  <div class="legend-color" style="background:#ef7d00;"></div>
-  <span>Orange: Elevated / Need Attention</span>
-</div>
-
-<div class="legend-row">
-  <div class="legend-color" style="background:#c62828;"></div>
-  <span>Red: High / ULV Suspend</span>
-</div>
-
-  </div>  <!-- Status box -->  <div class="status-box">
+  <div class="status-box">
     <h3>Map Update Status</h3>
     <p><strong>Data File:</strong> lot7-risk-data.json</p>
     <p><strong>Last Updated:</strong> <span id="lastUpdated">Loading...</span></p>
     <p><strong>Forecast Period:</strong> <span id="forecastPeriod">Loading...</span></p>
-    <p><strong>Data Source:</strong> Open-Meteo + AI Risk Rules</p>
+    <p><strong>Data Source:</strong> Open-Meteo + AI Operational Priority Rules</p>
     <div class="status-note">
-      This map is updated from the latest weather-based pest risk assessment.
-      It supports operational planning and does not replace field inspection findings.
+      Map colors represent operational priority based on weather forecast, ULV suitability,
+      and potential pest activity. They do not confirm current infestation and must be verified
+      by field inspection.
     </div>
-  </div>  <!-- Leaflet JS -->  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>  <script>
+  </div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
     let map;
     let geojsonLayer;
     let areasGeoJson;
     let riskData;
     let areaLayers = {};
 
-    // Initialize map
     map = L.map('map').setView([24.15, 55.75], 9);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -562,7 +594,6 @@
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Normalize names for matching
     function normalizeName(name) {
       return String(name || '')
         .trim()
@@ -571,7 +602,6 @@
         .replace(/[’‘]/g, "'");
     }
 
-    // Get area name from GeoJSON properties
     function getGeoJsonAreaName(feature) {
       const p = feature.properties || {};
 
@@ -589,7 +619,6 @@
       );
     }
 
-    // Risk color from JSON
     function getRiskColor(item) {
       const mapColor = normalizeName(item?.map_color || item?.mapColor || '');
       const riskLevel = normalizeName(item?.risk_level || item?.riskLevel || '');
@@ -635,14 +664,24 @@
       return 'badge-green';
     }
 
-    function getDisplayRiskLabel(item) {
-      return (
+    function getDisplayPriorityLabel(item) {
+      const color =
         item?.map_color ||
+        item?.mapColor ||
         item?.risk_level ||
         item?.riskLevel ||
-        item?.mapColor ||
-        'Green'
-      );
+        'Green';
+
+      const normalized = normalizeName(color);
+
+      if (normalized.includes('RED')) return 'High';
+      if (normalized.includes('ORANGE')) return 'Elevated';
+      if (normalized.includes('AMBER') || normalized.includes('YELLOW')) return 'Moderate';
+      if (normalized.includes('HIGH')) return 'High';
+      if (normalized.includes('ELEVATED')) return 'Elevated';
+      if (normalized.includes('MODERATE')) return 'Moderate';
+
+      return 'Routine';
     }
 
     function isNeedAttention(item) {
@@ -706,7 +745,6 @@
       return riskData?.areas || riskData?.risk_records || riskData?.records || [];
     }
 
-    // Load files
     async function loadData() {
       try {
         const geoResponse = await fetch('areas.geojson?t=' + new Date().getTime());
@@ -785,7 +823,7 @@
       if (!item) {
         return `
           <div class="popup-title">${areaName}</div>
-          <div class="popup-row"><strong>Status:</strong> No risk data found</div>
+          <div class="popup-row"><strong>Status:</strong> No data found</div>
           <div class="popup-recommendation">
             Check area name matching between areas.geojson and lot7-risk-data.json.
           </div>
@@ -797,18 +835,21 @@
       const fly = item.fly_risk ?? item.flyRisk ?? 'N/A';
       const ulv = item.ulv_status ?? item.ulvStatus ?? 'N/A';
       const recommendation = item.recommendation || 'Routine monitoring';
-      const label = getDisplayRiskLabel(item);
+      const label = getDisplayPriorityLabel(item);
 
       return `
         <div class="popup-title">${areaName}</div>
-        <div class="popup-row"><strong>Risk Score:</strong> ${score}</div>
-        <div class="popup-row"><strong>Map Color:</strong> ${label}</div>
+        <div class="popup-row"><strong>Operational Priority Score:</strong> ${score}</div>
+        <div class="popup-row"><strong>Operational Priority Level:</strong> ${label}</div>
         <div class="popup-row"><strong>Mosquito Risk:</strong> ${mosquito}</div>
         <div class="popup-row"><strong>Fly Risk:</strong> ${fly}</div>
         <div class="popup-row"><strong>ULV Status:</strong> ${ulv}</div>
         <div class="popup-recommendation">
           <strong>Recommendation:</strong><br>
           ${recommendation}
+        </div>
+        <div class="popup-note">
+          This priority level does not confirm current infestation. Field verification is required.
         </div>
       `;
     }
@@ -846,7 +887,7 @@
       document.getElementById('routineCount').textContent = routine;
 
       document.getElementById('summaryLine').textContent =
-        `Loaded ${totalAreas} areas and ${records.length} risk records.`;
+        `Loaded ${totalAreas} areas and ${records.length} operational priority records.`;
 
       updateTopRiskAreas(records);
     }
@@ -864,14 +905,14 @@
         .slice(0, 5);
 
       if (topAreas.length === 0) {
-        container.innerHTML = '<div class="summary-line">No risk records available.</div>';
+        container.innerHTML = '<div class="summary-line">No operational priority records available.</div>';
         return;
       }
 
       container.innerHTML = topAreas.map(item => {
         const areaName = item.area_name || item.areaName || item.area || item.name || 'Unknown Area';
         const score = item.risk_score ?? item.riskScore ?? 0;
-        const label = getDisplayRiskLabel(item);
+        const label = getDisplayPriorityLabel(item);
         const badgeClass = getBadgeClass(item);
 
         return `
@@ -954,11 +995,11 @@
       }
     }
 
-    // Auto refresh every 30 minutes
     loadData();
 
     setInterval(() => {
       loadData();
     }, 30 * 60 * 1000);
-  </script></body>
+  </script>
+</body>
 </html>
