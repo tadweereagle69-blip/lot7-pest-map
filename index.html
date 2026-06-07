@@ -43,7 +43,7 @@
       top:18px;
       left:65px;
       z-index:1000;
-      width:430px;
+      width:445px;
       max-height:calc(100vh - 205px);
       background:var(--card);
       border-radius:16px;
@@ -180,6 +180,58 @@
       border:1px solid var(--border-blue);
     }
 
+    .appearance-card {
+      margin-top:10px;
+      border:1px solid #cfe0ee;
+      border-radius:14px;
+      background:#f8fbfe;
+      padding:12px;
+    }
+
+    .appearance-card h3 {
+      margin:0 0 8px 0;
+      color:var(--primary-blue);
+      font-size:15px;
+    }
+
+    .appearance-row {
+      border-top:1px solid #e2edf6;
+      padding:8px 0;
+      font-size:12px;
+      line-height:1.4;
+    }
+
+    .appearance-row:first-of-type {
+      border-top:none;
+      padding-top:2px;
+    }
+
+    .appearance-row strong {
+      color:#0b4f8a;
+    }
+
+    .appearance-window {
+      display:inline-block;
+      margin-top:3px;
+      padding:3px 7px;
+      border-radius:999px;
+      background:#eaf3fb;
+      color:#0b4f8a;
+      font-weight:bold;
+      font-size:11px;
+    }
+
+    .appearance-note {
+      margin-top:8px;
+      background:#fff8e1;
+      border-left:4px solid #fbc02d;
+      border-radius:6px;
+      padding:7px 8px;
+      color:#5f4b00;
+      font-size:11.5px;
+      line-height:1.35;
+    }
+
     .top-risk-panel {
       margin-top:10px;
       border-top:1px solid #dbe8f3;
@@ -296,7 +348,7 @@
 
     .leaflet-popup-content {
       margin:12px 14px;
-      min-width:260px;
+      min-width:275px;
     }
 
     .popup-title {
@@ -341,7 +393,7 @@
         right:10px;
         bottom:18px;
         width:auto;
-        max-height:58vh;
+        max-height:62vh;
       }
 
       .control-panel.collapsed {
@@ -433,6 +485,44 @@
         <button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">Fly</button>
         <button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">ULV / Wind</button>
       </div>
+
+      <div class="appearance-card">
+        <h3>Expected Pest Appearance Window</h3>
+
+        <div class="appearance-row">
+          <strong>Selected Date:</strong>
+          <span id="appearanceSelectedDate">Loading...</span>
+        </div>
+
+        <div class="appearance-row">
+          <strong>Mosquito Larvae</strong><br>
+          <span class="appearance-window" id="larvaeWindow">Loading...</span><br>
+          Only if standing water, containers, irrigation leakage, or water-holding structures are found.
+        </div>
+
+        <div class="appearance-row">
+          <strong>Adult Mosquito</strong><br>
+          <span class="appearance-window" id="adultMosquitoWindow">Loading...</span><br>
+          Only if suitable breeding conditions continue after water presence.
+        </div>
+
+        <div class="appearance-row">
+          <strong>Fly Activity</strong><br>
+          <span class="appearance-window" id="flyWindow">Loading...</span><br>
+          Only if moist organic breeding conditions exist.
+        </div>
+
+        <div class="appearance-row">
+          <strong>Priority Areas:</strong><br>
+          <span id="appearancePriorityAreas">Loading...</span>
+        </div>
+
+        <div class="appearance-note">
+          This is a weather-based forecast window only. It does not confirm infestation or breeding.
+        </div>
+      </div>
+
+      <div class="section-title">Area Search</div>
 
       <select id="areaSelect">
         <option value="">Select Area / اختر المنطقة</option>
@@ -607,6 +697,171 @@
       return item;
     }
 
+    function getSelectedDateFromData() {
+      const records = getRecords();
+
+      if (!records || records.length === 0) return null;
+
+      const firstRecord = records[0];
+
+      if (!firstRecord.daily_7 || !Array.isArray(firstRecord.daily_7)) return null;
+
+      const dayItem = firstRecord.daily_7.find(d => Number(d.day) === Number(selectedDay));
+
+      return dayItem?.date || null;
+    }
+
+    function parseDate(dateText) {
+      if (!dateText) return null;
+
+      const d = new Date(dateText + 'T00:00:00');
+
+      if (isNaN(d.getTime())) return null;
+
+      return d;
+    }
+
+    function addDays(date, days) {
+      const d = new Date(date);
+      d.setDate(d.getDate() + days);
+      return d;
+    }
+
+    function formatDateShort(date) {
+      if (!date || isNaN(date.getTime())) return 'N/A';
+
+      return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short'
+      });
+    }
+
+    function formatDateFull(dateText, dayNumber) {
+      const date = parseDate(dateText);
+
+      if (!date) {
+        if (dayNumber === 1) return 'Today / Day 1';
+        if (dayNumber === 2) return 'Tomorrow / Day 2';
+        return `Day ${dayNumber}`;
+      }
+
+      const formatted = date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+
+      if (dayNumber === 1) return `Today - ${formatted}`;
+      if (dayNumber === 2) return `Tomorrow - ${formatted}`;
+
+      return `Day ${dayNumber} - ${formatted}`;
+    }
+
+    function populateDayDropdown() {
+      const select = document.getElementById('daySelect');
+      const records = getRecords();
+
+      if (!records || records.length === 0) return;
+
+      const firstRecord = records[0];
+
+      if (!firstRecord.daily_7 || !Array.isArray(firstRecord.daily_7)) return;
+
+      select.innerHTML = firstRecord.daily_7.slice(0, 7).map(dayItem => {
+        const dayNumber = Number(dayItem.day);
+        const label = formatDateFull(dayItem.date, dayNumber);
+
+        return `<option value="${dayNumber}">${label}</option>`;
+      }).join('');
+
+      select.value = String(selectedDay);
+    }
+
+    function getPriorityAreasForMode(mode) {
+      const records = getRecords();
+
+      if (!records || records.length === 0) return 'No data';
+
+      let mapped = records.map(item => {
+        const dayItem = getDailyItem(item) || item;
+
+        let score = 0;
+        let color = 'Green';
+
+        if (mode === 'mosquito') {
+          score = Number(dayItem.mosquito_score ?? item.mosquito_score ?? 0);
+          color = normalizeColor(dayItem.mosquito_color || item.mosquito_color || 'Green');
+        } else if (mode === 'fly') {
+          score = Number(dayItem.fly_score ?? item.fly_score ?? 0);
+          color = normalizeColor(dayItem.fly_color || item.fly_color || 'Green');
+        }
+
+        return {
+          name: item.area_name || item.name || 'Unknown Area',
+          score,
+          color
+        };
+      });
+
+      mapped.sort((a, b) => b.score - a.score);
+
+      const highestScore = mapped[0]?.score || 0;
+      const topSame = mapped.filter(x => x.score === highestScore);
+
+      if (highestScore <= 35 && topSame.length >= 10) {
+        if (mode === 'fly') {
+          return 'All areas; priority to farms, livestock sites, shaded moist areas, and organic waste locations.';
+        }
+
+        return 'All areas; priority to standing water, containers, irrigation leakage, and water-holding structures.';
+      }
+
+      return mapped.slice(0, 5).map(x => x.name).join(', ');
+    }
+
+    function updateAppearanceWindow() {
+      const dateText = getSelectedDateFromData();
+      const selectedDate = parseDate(dateText);
+
+      const selectedDateLabel = dateText
+        ? formatDateFull(dateText, selectedDay)
+        : `Day ${selectedDay}`;
+
+      document.getElementById('appearanceSelectedDate').textContent = selectedDateLabel;
+
+      if (!selectedDate) {
+        document.getElementById('larvaeWindow').textContent = 'N/A';
+        document.getElementById('adultMosquitoWindow').textContent = 'N/A';
+        document.getElementById('flyWindow').textContent = 'N/A';
+        document.getElementById('appearancePriorityAreas').textContent = 'No date data available.';
+        return;
+      }
+
+      const larvaeStart = addDays(selectedDate, 3);
+      const larvaeEnd = addDays(selectedDate, 5);
+
+      const adultStart = addDays(selectedDate, 5);
+      const adultEnd = addDays(selectedDate, 10);
+
+      const flyStart = addDays(selectedDate, 5);
+      const flyEnd = addDays(selectedDate, 10);
+
+      document.getElementById('larvaeWindow').textContent =
+        `${formatDateShort(larvaeStart)} – ${formatDateShort(larvaeEnd)}`;
+
+      document.getElementById('adultMosquitoWindow').textContent =
+        `${formatDateShort(adultStart)} – ${formatDateShort(adultEnd)}`;
+
+      document.getElementById('flyWindow').textContent =
+        `${formatDateShort(flyStart)} – ${formatDateShort(flyEnd)}`;
+
+      const mosquitoAreas = getPriorityAreasForMode('mosquito');
+      const flyAreas = getPriorityAreasForMode('fly');
+
+      document.getElementById('appearancePriorityAreas').innerHTML =
+        `<strong>Mosquito:</strong> ${mosquitoAreas}<br><strong>Fly:</strong> ${flyAreas}`;
+    }
+
     function getModeInfo(item) {
       const dayItem = getDailyItem(item);
 
@@ -726,7 +981,19 @@
       const windGust = dayItem.wind_gust_max ?? item.wind_gust_max ?? 'N/A';
 
       const recommendation = dayItem.recommendation || item.recommendation || 'Routine monitoring';
-      const dateText = dayItem.date || 'Selected forecast day';
+      const dateText = dayItem.date || getSelectedDateFromData() || 'Selected forecast day';
+
+      const selectedDate = parseDate(dateText);
+
+      let larvaeWindow = 'N/A';
+      let adultWindow = 'N/A';
+      let flyWindow = 'N/A';
+
+      if (selectedDate) {
+        larvaeWindow = `${formatDateShort(addDays(selectedDate, 3))} – ${formatDateShort(addDays(selectedDate, 5))}`;
+        adultWindow = `${formatDateShort(addDays(selectedDate, 5))} – ${formatDateShort(addDays(selectedDate, 10))}`;
+        flyWindow = `${formatDateShort(addDays(selectedDate, 5))} – ${formatDateShort(addDays(selectedDate, 10))}`;
+      }
 
       return `
         <div class="popup-title">${areaName}</div>
@@ -755,13 +1022,25 @@
           <strong>Wind Gust:</strong> ${windGust} km/h
         </div>
 
+        <div class="popup-row">
+          <strong>Mosquito Larvae Window:</strong> ${larvaeWindow}
+        </div>
+
+        <div class="popup-row">
+          <strong>Adult Mosquito Window:</strong> ${adultWindow}
+        </div>
+
+        <div class="popup-row">
+          <strong>Fly Activity Window:</strong> ${flyWindow}
+        </div>
+
         <div class="popup-recommendation">
           <strong>Recommendation:</strong><br>
           ${recommendation}
         </div>
 
         <div class="popup-note">
-          Current view: ${getModeTitle()}. Mosquito, Fly, and ULV/Wind are shown separately by selected day.
+          These windows are expected appearance periods only if suitable breeding conditions exist. They do not confirm infestation.
         </div>
       `;
     }
@@ -779,6 +1058,14 @@
         option.textContent = areaName;
         select.appendChild(option);
       }
+    }
+
+    function getModeSpecificInfo(item, mode) {
+      const previousMode = currentMode;
+      currentMode = mode;
+      const info = getModeInfo(item);
+      currentMode = previousMode;
+      return info;
     }
 
     function updateDashboard() {
@@ -811,14 +1098,7 @@
 
       updateLegend();
       updateTopList(records);
-    }
-
-    function getModeSpecificInfo(item, mode) {
-      const previousMode = currentMode;
-      currentMode = mode;
-      const info = getModeInfo(item);
-      currentMode = previousMode;
-      return info;
+      updateAppearanceWindow();
     }
 
     function updateTopList(records) {
@@ -1026,6 +1306,7 @@
         const riskResponse = await fetch('lot7-risk-data.json?t=' + new Date().getTime());
         riskData = await riskResponse.json();
 
+        populateDayDropdown();
         buildMap();
         updateDashboard();
         updateStatusBox();
