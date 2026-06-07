@@ -814,6 +814,11 @@
         "ABU HUREIBAH": "ABU HIRAYBAH",
         "ABU HIRAYBA": "ABU HIRAYBAH",
         "ABU HURAIBAH": "ABU HIRAYBAH",
+        "ABU HURAIBA": "ABU HIRAYBAH",
+        "ABU HURAYBAH": "ABU HIRAYBAH",
+        "ABU HURAYBA": "ABU HIRAYBAH",
+        "ABU HIRBAH": "ABU HIRAYBAH",
+        "ABU HIRBA": "ABU HIRAYBAH",
 
         "AL A'RAD": "AL A'RAD",
         "AL A’RAD": "AL A'RAD",
@@ -822,6 +827,10 @@
       };
 
       return aliases[n] || n;
+    }
+
+    function compactName(name) {
+      return normalizeName(name).replace(/[^A-Z0-9]/g, '');
     }
 
     function normalizeColor(color) {
@@ -875,6 +884,7 @@
 
     function createRiskLookup() {
       const lookup = {};
+      const compactLookup = {};
       const records = getRecords();
 
       records.forEach(item => {
@@ -886,10 +896,82 @@
           '';
 
         const normalized = normalizeName(areaName);
+        const compact = compactName(areaName);
+
         lookup[normalized] = item;
+        compactLookup[compact] = item;
       });
 
-      return lookup;
+      return {
+        lookup,
+        compactLookup
+      };
+    }
+
+    function findRiskItem(areaName, riskLookups) {
+      const normalized = normalizeName(areaName);
+      const compact = compactName(areaName);
+
+      if (riskLookups.lookup[normalized]) {
+        return riskLookups.lookup[normalized];
+      }
+
+      if (riskLookups.compactLookup[compact]) {
+        return riskLookups.compactLookup[compact];
+      }
+
+      const specialAliases = {
+        "ABUHIRAYBAH": [
+          "ABUHUREIBAH",
+          "ABUHURAIBAH",
+          "ABUHURAYBAH",
+          "ABUHIRAYBA",
+          "ABUHURAIBA",
+          "ABUHURAYBA",
+          "ABUHIRBAH",
+          "ABUHIRBA"
+        ],
+        "JABALHAFEET": [
+          "JEBELHAFEET",
+          "JABALHAFIT",
+          "JEBELHAFIT",
+          "JABALHAFEETAREA",
+          "JEBELHAFEETAREA"
+        ],
+        "ALSHUWAIMAH": [
+          "ALSHUWAYMAH",
+          "ALSHUWAIMA",
+          "ALSHUWAIYMAH"
+        ],
+        "BUKIRAYYAH": [
+          "BUKIRIYYAH",
+          "BUKIRAYAH",
+          "BUKRIYYAH",
+          "BUKRIYAH"
+        ],
+        "ZAKHIR": [
+          "ZAKHER",
+          "ZAKIR"
+        ],
+        "ALQOU": [
+          "ALQUA",
+          "ALQUAA"
+        ],
+        "ALARAD": [
+          "ALA'RAD",
+          "ALARAD"
+        ]
+      };
+
+      const possibleNames = specialAliases[compact] || [];
+
+      for (const possible of possibleNames) {
+        if (riskLookups.compactLookup[possible]) {
+          return riskLookups.compactLookup[possible];
+        }
+      }
+
+      return null;
     }
 
     function getDailyItem(item) {
@@ -1108,7 +1190,7 @@
     }
 
     function buildMap() {
-      const riskLookup = createRiskLookup();
+      const riskLookups = createRiskLookup();
 
       if (geojsonLayer) {
         map.removeLayer(geojsonLayer);
@@ -1119,7 +1201,7 @@
       geojsonLayer = L.geoJSON(areasGeoJson, {
         style: function(feature) {
           const areaName = getGeoJsonAreaName(feature);
-          const item = riskLookup[normalizeName(areaName)];
+          const item = findRiskItem(areaName, riskLookups);
           const info = getModeInfo(item);
 
           return {
@@ -1134,7 +1216,7 @@
         onEachFeature: function(feature, layer) {
           const areaName = getGeoJsonAreaName(feature);
           const normalized = normalizeName(areaName);
-          const item = riskLookup[normalized];
+          const item = findRiskItem(areaName, riskLookups);
 
           areaLayers[normalized] = layer;
 
