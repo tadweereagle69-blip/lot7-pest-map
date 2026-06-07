@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Lot 7 AI Pest Risk Dashboard</title>
+  <title>Lot 7 AI Mosquito Fly ULV Dashboard</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -20,7 +20,8 @@
       --amber:#fbc02d;
       --orange:#ef7d00;
       --red:#c62828;
-      --card:#fff;
+      --grey:#9ca3af;
+      --card:#ffffff;
     }
 
     html, body {
@@ -42,7 +43,7 @@
       top:18px;
       left:65px;
       z-index:1000;
-      width:460px;
+      width:430px;
       max-height:calc(100vh - 205px);
       background:var(--card);
       border-radius:16px;
@@ -87,7 +88,7 @@
 
     .kpi-grid {
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:8px;
       margin-bottom:12px;
     }
@@ -113,9 +114,9 @@
       margin-top:4px;
     }
 
-    .kpi-card.attention .number { color:var(--orange); }
-    .kpi-card.suspend .number { color:var(--red); }
-    .kpi-card.routine .number { color:var(--green); }
+    .kpi-card.mosquito .number { color:var(--amber); }
+    .kpi-card.fly .number { color:var(--orange); }
+    .kpi-card.ulv .number { color:var(--red); }
 
     .view-section-title {
       margin:10px 0 7px 0;
@@ -126,13 +127,13 @@
 
     .view-grid {
       display:grid;
-      grid-template-columns:repeat(2,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:7px;
       margin-bottom:10px;
     }
 
     .view-btn {
-      padding:9px 7px;
+      padding:10px 7px;
       border-radius:10px;
       border:1px solid var(--border-blue);
       background:#edf4fb;
@@ -168,8 +169,16 @@
       margin-bottom:8px;
     }
 
-    .btn-primary { background:var(--primary-blue); color:#fff; }
-    .btn-secondary { background:#edf4fb; color:var(--primary-blue); border:1px solid var(--border-blue); }
+    .btn-primary {
+      background:var(--primary-blue);
+      color:#fff;
+    }
+
+    .btn-secondary {
+      background:#edf4fb;
+      color:var(--primary-blue);
+      border:1px solid var(--border-blue);
+    }
 
     .top-risk-panel {
       margin-top:10px;
@@ -185,7 +194,7 @@
 
     .top-risk-item {
       display:grid;
-      grid-template-columns:1fr 42px 76px;
+      grid-template-columns:1fr 42px 82px;
       gap:6px;
       align-items:center;
       font-size:12px;
@@ -206,10 +215,30 @@
       text-align:center;
     }
 
-    .badge-green { background:#e6f4ea; color:var(--green); }
-    .badge-amber { background:#fff8df; color:#9a6a00; }
-    .badge-orange { background:#fff0df; color:var(--orange); }
-    .badge-red { background:#fdecea; color:var(--red); }
+    .badge-green {
+      background:#e6f4ea;
+      color:var(--green);
+    }
+
+    .badge-amber {
+      background:#fff8df;
+      color:#9a6a00;
+    }
+
+    .badge-orange {
+      background:#fff0df;
+      color:var(--orange);
+    }
+
+    .badge-red {
+      background:#fdecea;
+      color:var(--red);
+    }
+
+    .badge-grey {
+      background:#f1f5f9;
+      color:#475569;
+    }
 
     .legend-box {
       position:absolute;
@@ -280,6 +309,15 @@
       border-radius:6px;
     }
 
+    .leaflet-popup-content-wrapper {
+      border-radius:12px;
+    }
+
+    .leaflet-popup-content {
+      margin:12px 14px;
+      min-width:250px;
+    }
+
     .popup-title {
       font-size:16px;
       font-weight:700;
@@ -290,6 +328,10 @@
     .popup-row {
       margin:5px 0;
       font-size:13px;
+    }
+
+    .popup-row strong {
+      color:#263238;
     }
 
     .popup-recommendation {
@@ -352,8 +394,12 @@
         font-weight:bold;
       }
 
+      .view-grid {
+        grid-template-columns:1fr;
+      }
+
       .kpi-grid {
-        grid-template-columns:repeat(2,1fr);
+        grid-template-columns:repeat(3,1fr);
       }
 
       .legend-box,
@@ -372,58 +418,70 @@
     <div class="panel-header">
       <button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">Hide</button>
       <h2>Lot 7 AI Pest Risk Dashboard</h2>
-      <p>Separate views: Pest • Mosquito • Fly • ULV/Wind • Field Check</p>
+      <p>View Mode: Mosquito • Fly • ULV / Wind</p>
     </div>
 
     <div class="panel-body">
-      <div class="summary-line" id="summaryLine">Loading dashboard data...</div>
+      <div class="summary-line" id="summaryLine">
+        Loading dashboard data...
+      </div>
 
       <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="number" id="areasCount">0</div>
-          <div class="label">Areas</div>
+        <div class="kpi-card mosquito">
+          <div class="number" id="mosquitoAttentionCount">0</div>
+          <div class="label">Mosquito</div>
         </div>
-        <div class="kpi-card attention">
-          <div class="number" id="fieldCheckCount">0</div>
-          <div class="label">Field Check</div>
+
+        <div class="kpi-card fly">
+          <div class="number" id="flyAttentionCount">0</div>
+          <div class="label">Fly</div>
         </div>
-        <div class="kpi-card suspend">
+
+        <div class="kpi-card ulv">
           <div class="number" id="ulvSuspendCount">0</div>
           <div class="label">ULV Suspend</div>
-        </div>
-        <div class="kpi-card routine">
-          <div class="number" id="routineCount">0</div>
-          <div class="label">Routine</div>
         </div>
       </div>
 
       <div class="view-section-title">View Mode</div>
 
       <div class="view-grid">
-        <button class="view-btn active" data-mode="pest" onclick="setViewMode('pest')">Pest Risk</button>
-        <button class="view-btn" data-mode="mosquito" onclick="setViewMode('mosquito')">Mosquito</button>
-        <button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">Fly</button>
-        <button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">ULV / Wind</button>
-        <button class="view-btn" data-mode="field" onclick="setViewMode('field')">Field Check</button>
-        <button class="view-btn" data-mode="routine" onclick="setViewMode('routine')">Routine</button>
+        <button class="view-btn active" data-mode="mosquito" onclick="setViewMode('mosquito')">
+          Mosquito
+        </button>
+
+        <button class="view-btn" data-mode="fly" onclick="setViewMode('fly')">
+          Fly
+        </button>
+
+        <button class="view-btn" data-mode="ulv" onclick="setViewMode('ulv')">
+          ULV / Wind
+        </button>
       </div>
 
       <select id="areaSelect">
         <option value="">Select Area / اختر المنطقة</option>
       </select>
 
-      <button class="main-btn btn-primary" onclick="zoomToSelectedArea()">Zoom to Selected Area</button>
-      <button class="main-btn btn-secondary" onclick="showAllAreas()">Show All Areas</button>
+      <button class="main-btn btn-primary" onclick="zoomToSelectedArea()">
+        Zoom to Selected Area
+      </button>
+
+      <button class="main-btn btn-secondary" onclick="showAllAreas()">
+        Show All Areas
+      </button>
 
       <div class="top-risk-panel">
-        <h3 id="topListTitle">Top Pest Risk Areas</h3>
-        <div id="topRiskAreasList">Loading...</div>
+        <h3 id="topListTitle">Top Mosquito Risk Areas</h3>
+        <div id="topRiskAreasList">
+          Loading...
+        </div>
       </div>
     </div>
   </div>
 
   <div class="legend-box">
-    <h3 id="legendTitle">Pest Risk Classification</h3>
+    <h3 id="legendTitle">Mosquito Risk Classification</h3>
     <div id="legendRows"></div>
   </div>
 
@@ -434,7 +492,7 @@
     <p><strong>Forecast Period:</strong> <span id="forecastPeriod">Loading...</span></p>
     <p><strong>Data Source:</strong> Open-Meteo + AI Risk Rules</p>
     <div class="status-note" id="statusNote">
-      Map colors show pest risk only. Other modes show mosquito, fly, ULV/wind, field check, and routine status separately.
+      Use the buttons to switch between Mosquito Risk, Fly Risk, and ULV/Wind suitability.
     </div>
   </div>
 
@@ -446,7 +504,7 @@
     let areasGeoJson;
     let riskData;
     let areaLayers = {};
-    let currentMode = 'pest';
+    let currentMode = 'mosquito';
 
     const COLOR_HEX = {
       Green: '#2e7d32',
@@ -474,10 +532,12 @@
 
     function normalizeColor(color) {
       const c = String(color || '').trim();
+
       if (/red/i.test(c)) return 'Red';
       if (/orange/i.test(c)) return 'Orange';
       if (/amber|yellow/i.test(c)) return 'Amber';
       if (/green/i.test(c)) return 'Green';
+
       return 'Green';
     }
 
@@ -487,44 +547,69 @@
 
     function badgeClass(color) {
       const c = normalizeColor(color).toLowerCase();
-      return 'badge-' + (c === 'yellow' ? 'amber' : c);
+
+      if (c === 'green') return 'badge-green';
+      if (c === 'amber') return 'badge-amber';
+      if (c === 'orange') return 'badge-orange';
+      if (c === 'red') return 'badge-red';
+
+      return 'badge-grey';
     }
 
     function getGeoJsonAreaName(feature) {
       const p = feature.properties || {};
-      return p.name || p.Name || p.area_name || p.AREA_NAME || p.AreaName || p.area || p.AREA || p.zone || p.Zone || '';
+
+      return (
+        p.name ||
+        p.Name ||
+        p.area_name ||
+        p.AREA_NAME ||
+        p.AreaName ||
+        p.area ||
+        p.AREA ||
+        p.zone ||
+        p.Zone ||
+        ''
+      );
     }
 
     function getRecords() {
-      return Array.isArray(riskData) ? riskData : riskData?.areas || riskData?.risk_records || riskData?.records || [];
+      return Array.isArray(riskData)
+        ? riskData
+        : riskData?.areas || riskData?.risk_records || riskData?.records || [];
     }
 
-    function createRiskLookup(data) {
+    function createRiskLookup() {
       const lookup = {};
-      getRecords().forEach(item => {
-        const areaName = item.area_name || item.areaName || item.area || item.name || '';
+      const records = getRecords();
+
+      records.forEach(item => {
+        const areaName =
+          item.area_name ||
+          item.areaName ||
+          item.area ||
+          item.name ||
+          '';
+
         lookup[normalizeName(areaName)] = item;
       });
+
       return lookup;
     }
 
     function getModeInfo(item) {
       if (!item) {
-        return { score: 0, label: 'No Data', color: 'Grey', visible: true };
-      }
-
-      if (currentMode === 'mosquito') {
         return {
-          score: item.mosquito_score ?? 0,
-          label: item.mosquito_risk || 'Low',
-          color: item.mosquito_color || 'Green',
+          score: 0,
+          label: 'No Data',
+          color: 'Grey',
           visible: true
         };
       }
 
       if (currentMode === 'fly') {
         return {
-          score: item.fly_score ?? 0,
+          score: Number(item.fly_score ?? 0),
           label: item.fly_risk || 'Low',
           color: item.fly_color || 'Green',
           visible: true
@@ -533,43 +618,23 @@
 
       if (currentMode === 'ulv') {
         return {
-          score: item.wind_speed_max ?? 0,
+          score: Number(item.wind_speed_max ?? 0),
           label: item.ulv_status || 'Suitable',
           color: item.ulv_color || 'Green',
           visible: true
         };
       }
 
-      if (currentMode === 'field') {
-        const required = item.field_check_required === true || item.fieldCheckRequired === true;
-        return {
-          score: required ? 1 : 0,
-          label: required ? 'Field Check' : 'No Field Check',
-          color: required ? 'Amber' : 'Green',
-          visible: true
-        };
-      }
-
-      if (currentMode === 'routine') {
-        const routine = item.routine_status === true || item.routineStatus === true;
-        return {
-          score: routine ? 1 : 0,
-          label: routine ? 'Routine' : 'Not Routine',
-          color: routine ? 'Green' : 'Grey',
-          visible: routine
-        };
-      }
-
       return {
-        score: item.pest_risk_score ?? item.risk_score ?? 0,
-        label: item.pest_risk_level || item.risk_level || 'Low',
-        color: item.pest_map_color || item.map_color || 'Green',
+        score: Number(item.mosquito_score ?? 0),
+        label: item.mosquito_risk || 'Low',
+        color: item.mosquito_color || 'Green',
         visible: true
       };
     }
 
     function buildMap() {
-      const riskLookup = createRiskLookup(riskData);
+      const riskLookup = createRiskLookup();
 
       if (geojsonLayer) {
         map.removeLayer(geojsonLayer);
@@ -584,9 +649,9 @@
           const info = getModeInfo(item);
 
           return {
-            color: info.visible ? '#1f6f35' : '#94a3b8',
-            weight: info.visible ? 2 : 1,
-            opacity: info.visible ? 0.95 : 0.35,
+            color: '#1f6f35',
+            weight: 2,
+            opacity: 0.95,
             fillColor: info.visible ? colorToHex(info.color) : '#cbd5e1',
             fillOpacity: info.visible ? 0.72 : 0.15
           };
@@ -601,9 +666,15 @@
 
           layer.on({
             mouseover: function(e) {
-              e.target.setStyle({ weight: 4, color: '#003b66', fillOpacity: 0.85 });
+              e.target.setStyle({
+                weight: 4,
+                color: '#003b66',
+                fillOpacity: 0.85
+              });
+
               e.target.bringToFront();
             },
+
             mouseout: function(e) {
               geojsonLayer.resetStyle(e.target);
             }
@@ -614,7 +685,9 @@
         }
       }).addTo(map);
 
-      map.fitBounds(geojsonLayer.getBounds(), { padding: [30, 30] });
+      map.fitBounds(geojsonLayer.getBounds(), {
+        padding: [30, 30]
+      });
     }
 
     function buildPopup(areaName, item) {
@@ -622,27 +695,64 @@
         return `
           <div class="popup-title">${areaName}</div>
           <div class="popup-row"><strong>Status:</strong> No data found</div>
-          <div class="popup-recommendation">Check area name matching between areas.geojson and lot7-risk-data.json.</div>
+          <div class="popup-recommendation">
+            Check area name matching between areas.geojson and lot7-risk-data.json.
+          </div>
         `;
       }
 
+      const mosquitoRisk = item.mosquito_risk || 'Low';
+      const mosquitoScore = item.mosquito_score ?? 0;
+
+      const flyRisk = item.fly_risk || 'Low';
+      const flyScore = item.fly_score ?? 0;
+
+      const ulvStatus = item.ulv_status || 'Suitable';
+      const windMax = item.wind_speed_max ?? 'N/A';
+      const windGust = item.wind_gust_max ?? 'N/A';
+
+      const recommendation = item.recommendation || 'Routine monitoring';
+
       return `
         <div class="popup-title">${areaName}</div>
-        <div class="popup-row"><strong>Pest Risk:</strong> ${item.pest_risk_level || item.risk_level || 'Low'} (${item.pest_risk_score ?? item.risk_score ?? 0})</div>
-        <div class="popup-row"><strong>Mosquito:</strong> ${item.mosquito_risk || 'Low'} (${item.mosquito_score ?? 0})</div>
-        <div class="popup-row"><strong>Fly:</strong> ${item.fly_risk || 'Low'} (${item.fly_score ?? 0})</div>
-        <div class="popup-row"><strong>ULV Status:</strong> ${item.ulv_status || 'Suitable'}</div>
-        <div class="popup-row"><strong>Wind Max:</strong> ${item.wind_speed_max ?? 'N/A'} km/h</div>
-        <div class="popup-row"><strong>Wind Gust:</strong> ${item.wind_gust_max ?? 'N/A'} km/h</div>
-        <div class="popup-row"><strong>Field Check:</strong> ${(item.field_check_required === true) ? 'Required' : 'Not Required'}</div>
-        <div class="popup-recommendation"><strong>Recommendation:</strong><br>${item.recommendation || 'Routine monitoring'}</div>
-        <div class="popup-note">Current view: ${getModeTitle()}. ULV status is separate from pest risk.</div>
+
+        <div class="popup-row">
+          <strong>Mosquito Risk:</strong> ${mosquitoRisk} (${mosquitoScore})
+        </div>
+
+        <div class="popup-row">
+          <strong>Fly Risk:</strong> ${flyRisk} (${flyScore})
+        </div>
+
+        <div class="popup-row">
+          <strong>ULV Status:</strong> ${ulvStatus}
+        </div>
+
+        <div class="popup-row">
+          <strong>Wind Max:</strong> ${windMax} km/h
+        </div>
+
+        <div class="popup-row">
+          <strong>Wind Gust:</strong> ${windGust} km/h
+        </div>
+
+        <div class="popup-recommendation">
+          <strong>Recommendation:</strong><br>
+          ${recommendation}
+        </div>
+
+        <div class="popup-note">
+          Current view: ${getModeTitle()}. Mosquito, Fly, and ULV/Wind are shown separately.
+        </div>
       `;
     }
 
     function addAreaToDropdown(areaName) {
       const select = document.getElementById('areaSelect');
-      const exists = Array.from(select.options).some(option => option.value === normalizeName(areaName));
+
+      const exists = Array.from(select.options).some(
+        option => option.value === normalizeName(areaName)
+      );
 
       if (!exists && areaName) {
         const option = document.createElement('option');
@@ -656,14 +766,25 @@
       const records = getRecords();
       const totalAreas = riskData.totalAreas || riskData.total_areas || 35;
 
-      const fieldCheck = records.filter(x => x.field_check_required === true).length;
-      const ulvSuspend = records.filter(x => x.ulv_suspend === true || String(x.ulv_status || '').toUpperCase().includes('SUSPEND')).length;
-      const routine = records.filter(x => x.routine_status === true).length;
+      const mosquitoAttention = records.filter(item => {
+        const score = Number(item.mosquito_score ?? 0);
+        const color = normalizeColor(item.mosquito_color || 'Green');
+        return score >= 50 || color === 'Amber' || color === 'Orange' || color === 'Red';
+      }).length;
 
-      document.getElementById('areasCount').textContent = totalAreas;
-      document.getElementById('fieldCheckCount').textContent = fieldCheck;
+      const flyAttention = records.filter(item => {
+        const score = Number(item.fly_score ?? 0);
+        const color = normalizeColor(item.fly_color || 'Green');
+        return score >= 50 || color === 'Amber' || color === 'Orange' || color === 'Red';
+      }).length;
+
+      const ulvSuspend = records.filter(item => {
+        return item.ulv_suspend === true || String(item.ulv_status || '').toUpperCase().includes('SUSPEND');
+      }).length;
+
+      document.getElementById('mosquitoAttentionCount').textContent = mosquitoAttention;
+      document.getElementById('flyAttentionCount').textContent = flyAttention;
       document.getElementById('ulvSuspendCount').textContent = ulvSuspend;
-      document.getElementById('routineCount').textContent = routine;
 
       document.getElementById('summaryLine').textContent =
         `Loaded ${totalAreas} areas. Current view: ${getModeTitle()}.`;
@@ -674,24 +795,19 @@
 
     function updateTopList(records) {
       const container = document.getElementById('topRiskAreasList');
+
       document.getElementById('topListTitle').textContent = getTopListTitle();
 
-      let filtered = records.map(item => {
+      let mapped = records.map(item => {
         const info = getModeInfo(item);
         return { item, info };
       });
 
-      if (currentMode === 'field') {
-        filtered = filtered.filter(x => x.item.field_check_required === true);
-      } else if (currentMode === 'routine') {
-        filtered = filtered.filter(x => x.item.routine_status === true);
-      } else {
-        filtered = filtered.filter(x => Number(x.info.score || 0) > 0);
-      }
+      mapped = mapped.filter(x => Number(x.info.score || 0) > 0);
 
-      filtered.sort((a, b) => Number(b.info.score || 0) - Number(a.info.score || 0));
+      mapped.sort((a, b) => Number(b.info.score || 0) - Number(a.info.score || 0));
 
-      const topAreas = filtered.slice(0, 5);
+      const topAreas = mapped.slice(0, 5);
 
       if (topAreas.length === 0) {
         container.innerHTML = '<div class="summary-line">No records for this view.</div>';
@@ -699,7 +815,13 @@
       }
 
       container.innerHTML = topAreas.map(({ item, info }) => {
-        const areaName = item.area_name || item.areaName || item.area || item.name || 'Unknown Area';
+        const areaName =
+          item.area_name ||
+          item.areaName ||
+          item.area ||
+          item.name ||
+          'Unknown Area';
+
         return `
           <div class="top-risk-item">
             <div>${areaName}</div>
@@ -711,21 +833,17 @@
     }
 
     function getModeTitle() {
-      if (currentMode === 'mosquito') return 'Mosquito Risk';
       if (currentMode === 'fly') return 'Fly Risk';
       if (currentMode === 'ulv') return 'ULV / Wind';
-      if (currentMode === 'field') return 'Field Check';
-      if (currentMode === 'routine') return 'Routine Areas';
-      return 'Overall Pest Risk';
+
+      return 'Mosquito Risk';
     }
 
     function getTopListTitle() {
-      if (currentMode === 'mosquito') return 'Top Mosquito Risk Areas';
       if (currentMode === 'fly') return 'Top Fly Risk Areas';
       if (currentMode === 'ulv') return 'Top ULV / Wind Areas';
-      if (currentMode === 'field') return 'Areas Requiring Field Check';
-      if (currentMode === 'routine') return 'Routine Areas';
-      return 'Top Pest Risk Areas';
+
+      return 'Top Mosquito Risk Areas';
     }
 
     function updateLegend() {
@@ -737,39 +855,52 @@
 
       if (currentMode === 'ulv') {
         rows.innerHTML = `
-          <div class="legend-row"><div class="legend-color" style="background:#2e7d32;"></div><span>Green: Suitable ULV</span></div>
-          <div class="legend-row"><div class="legend-color" style="background:#fbc02d;"></div><span>Amber: Caution</span></div>
-          <div class="legend-row"><div class="legend-color" style="background:#c62828;"></div><span>Red: Suspend ULV</span></div>
-        `;
-        note.textContent = 'ULV / Wind view shows spraying suitability based on wind speed. It does not confirm infestation.';
-        return;
-      }
+          <div class="legend-row">
+            <div class="legend-color" style="background:#2e7d32;"></div>
+            <span>Green: Suitable ULV</span>
+          </div>
 
-      if (currentMode === 'field') {
-        rows.innerHTML = `
-          <div class="legend-row"><div class="legend-color" style="background:#fbc02d;"></div><span>Amber: Field Check Required</span></div>
-          <div class="legend-row"><div class="legend-color" style="background:#2e7d32;"></div><span>Green: No Field Check</span></div>
-        `;
-        note.textContent = 'Field Check means potential breeding sites should be verified. It does not confirm infestation.';
-        return;
-      }
+          <div class="legend-row">
+            <div class="legend-color" style="background:#fbc02d;"></div>
+            <span>Amber: Caution</span>
+          </div>
 
-      if (currentMode === 'routine') {
-        rows.innerHTML = `
-          <div class="legend-row"><div class="legend-color" style="background:#2e7d32;"></div><span>Green: Routine Area</span></div>
-          <div class="legend-row"><div class="legend-color" style="background:#cbd5e1;"></div><span>Grey: Not Routine in this view</span></div>
+          <div class="legend-row">
+            <div class="legend-color" style="background:#c62828;"></div>
+            <span>Red: Suspend ULV</span>
+          </div>
         `;
-        note.textContent = 'Routine view highlights areas under routine monitoring.';
+
+        note.textContent =
+          'ULV / Wind view shows spraying suitability based on wind speed. It does not confirm infestation.';
+
         return;
       }
 
       rows.innerHTML = `
-        <div class="legend-row"><div class="legend-color" style="background:#2e7d32;"></div><span>Green: Low</span></div>
-        <div class="legend-row"><div class="legend-color" style="background:#fbc02d;"></div><span>Amber: Moderate</span></div>
-        <div class="legend-row"><div class="legend-color" style="background:#ef7d00;"></div><span>Orange: Elevated</span></div>
-        <div class="legend-row"><div class="legend-color" style="background:#c62828;"></div><span>Red: High</span></div>
+        <div class="legend-row">
+          <div class="legend-color" style="background:#2e7d32;"></div>
+          <span>Green: Low</span>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-color" style="background:#fbc02d;"></div>
+          <span>Amber: Moderate</span>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-color" style="background:#ef7d00;"></div>
+          <span>Orange: Elevated</span>
+        </div>
+
+        <div class="legend-row">
+          <div class="legend-color" style="background:#c62828;"></div>
+          <span>Red: High</span>
+        </div>
       `;
-      note.textContent = 'Map colors in this view show pest-related risk only. ULV is shown separately in ULV / Wind view.';
+
+      note.textContent =
+        'Use the buttons to switch between Mosquito Risk, Fly Risk, and ULV/Wind suitability.';
     }
 
     function setViewMode(mode) {
@@ -788,15 +919,27 @@
     function updateStatusBox() {
       const now = new Date();
 
-      const forecastStart = riskData.forecastStart || riskData.forecast_start || riskData.forecastPeriod?.start || '';
-      const forecastEnd = riskData.forecastEnd || riskData.forecast_end || riskData.forecastPeriod?.end || '';
+      const forecastStart =
+        riskData.forecastStart ||
+        riskData.forecast_start ||
+        riskData.forecastPeriod?.start ||
+        '';
 
-      document.getElementById('lastUpdated').textContent = now.toLocaleString();
+      const forecastEnd =
+        riskData.forecastEnd ||
+        riskData.forecast_end ||
+        riskData.forecastPeriod?.end ||
+        '';
+
+      document.getElementById('lastUpdated').textContent =
+        now.toLocaleString();
 
       if (forecastStart && forecastEnd) {
-        document.getElementById('forecastPeriod').textContent = `${forecastStart} to ${forecastEnd}`;
+        document.getElementById('forecastPeriod').textContent =
+          `${forecastStart} to ${forecastEnd}`;
       } else {
-        document.getElementById('forecastPeriod').textContent = 'Latest 16-day forecast';
+        document.getElementById('forecastPeriod').textContent =
+          'Latest 16-day forecast';
       }
     }
 
@@ -827,7 +970,9 @@
     }
 
     function toggleMobilePanel(event) {
-      if (event) event.stopPropagation();
+      if (event) {
+        event.stopPropagation();
+      }
 
       const panel = document.querySelector('.control-panel');
       const button = document.querySelector('.mobile-panel-toggle');
@@ -848,7 +993,8 @@
         updateDashboard();
         updateStatusBox();
       } catch (error) {
-        console.error('Error loading data:', error);
+        console.error('Error loading dashboard data:', error);
+
         document.getElementById('summaryLine').textContent =
           'Error loading dashboard data. Please check areas.geojson and lot7-risk-data.json.';
       }
