@@ -660,33 +660,165 @@
       let n = String(name || '')
         .trim()
         .toUpperCase()
+        .replace(/[’‘`]/g, "'")
+        .replace(/[-_]/g, ' ')
         .replace(/\s+/g, ' ')
-        .replace(/[’‘]/g, "'")
-        .replace(/-/g, ' ');
+        .replace(/\./g, '')
+        .trim();
 
       const aliases = {
+        "AL MUTAWAH": "AL MUTAWAH",
+        "AL MUTAWA": "AL MUTAWAH",
+        "MUTAWAH": "AL MUTAWAH",
+
+        "AL MUTARID": "AL MUTARID",
+        "AL MU'TARID": "AL MUTARID",
+        "AL MU’TARID": "AL MUTARID",
+        "AL MUTARED": "AL MUTARID",
+        "MUTARID": "AL MUTARID",
+
+        "AL JAHILI": "AL JAHILI",
+        "JAHILI": "AL JAHILI",
+
+        "CENTRAL DISTRICT": "CENTRAL DISTRICT",
+        "CENTRAL": "CENTRAL DISTRICT",
+
+        "MAZYAD": "MAZYAD",
+        "MEZYAD": "MAZYAD",
+
+        "AL NOUD": "AL NOUD",
+        "AL NOD": "AL NOUD",
+        "NOUD": "AL NOUD",
+
+        "UM GHAFAH": "UM GHAFAH",
+        "UMM GHAFAH": "UM GHAFAH",
+        "UM GHAFA": "UM GHAFAH",
+
+        "SA'": "SA'",
+        "SA": "SA'",
+        "SAA": "SA'",
+
+        "MALAQIT": "MALAQIT",
+        "MALAQET": "MALAQIT",
+
+        "AL AFLAJ": "AL AFLAJ",
+        "AFLAJ": "AL AFLAJ",
+
+        "KHATM AL SHIKLAH": "KHATM AL SHIKLAH",
+        "KHATM AL SHIKLA": "KHATM AL SHIKLAH",
+        "KHATAM AL SHIKLAH": "KHATM AL SHIKLAH",
+
+        "AL RUWAYDAT": "AL RUWAYDAT",
+        "AL RUWAIDAT": "AL RUWAYDAT",
+        "AL ROUWAYDAT": "AL RUWAYDAT",
+
+        "AL SHUWAIMAH": "AL SHUWAIMAH",
         "AL SHUWAYMAH": "AL SHUWAIMAH",
         "AL SHUWAIMA": "AL SHUWAIMAH",
         "AL SHUWAIYMAH": "AL SHUWAIMAH",
-        "AL MU'TARID": "AL MUTARID",
-        "AL MU’TARID": "AL MUTARID",
+
+        "AL SAROUJ": "AL SAROUJ",
+        "AL SAROOJ": "AL SAROUJ",
+        "SAROUJ": "AL SAROUJ",
+
+        "AL DHAHIR": "AL DHAHIR",
+        "AL DAHIR": "AL DHAHIR",
+        "AL DHAAHIR": "AL DHAHIR",
+
+        "INDUSTRIAL AREA": "INDUSTRIAL AREA",
+        "INDUSTRIAL": "INDUSTRIAL AREA",
+        "AL AIN INDUSTRIAL AREA": "INDUSTRIAL AREA",
+
+        "NI'MAH": "NI'MAH",
+        "NI’MAH": "NI'MAH",
+        "NIMAH": "NI'MAH",
+        "NE'MAH": "NI'MAH",
+        "NEMAH": "NI'MAH",
+
+        "JABAL HAFEET": "JABAL HAFEET",
+        "JEBEL HAFEET": "JABAL HAFEET",
+        "JABAL HAFIT": "JABAL HAFEET",
+        "JEBEL HAFIT": "JABAL HAFEET",
+        "JABAL HAFEET AREA": "JABAL HAFEET",
+        "JEBEL HAFEET AREA": "JABAL HAFEET",
+
+        "MBAZZARAH AL KHADRA": "MBAZZARAH AL KHADRA",
+        "MBAZZARAH AL KHADRAH": "MBAZZARAH AL KHADRA",
+        "MUBAZZARAH AL KHADRA": "MBAZZARAH AL KHADRA",
+        "MUBAZARAH AL KHADRA": "MBAZZARAH AL KHADRA",
+
+        "SHIAB AL ASHKHAR": "SHIAB AL ASHKHAR",
+        "SHI'AB AL ASHKHAR": "SHIAB AL ASHKHAR",
+        "SHIAB AL ASHKER": "SHIAB AL ASHKHAR",
+
+        "SHI'BAT AL WUTAH": "SHI'BAT AL WUTAH",
+        "SHI’BAT AL WUTAH": "SHI'BAT AL WUTAH",
+        "SHIBAT AL WUTAH": "SHI'BAT AL WUTAH",
+        "SHIEBAT AL WUTAH": "SHI'BAT AL WUTAH",
+
+        "AIN AL FAYDAH": "AIN AL FAYDAH",
+        "AIN AL FAYDA": "AIN AL FAYDAH",
+        "AL AIN AL FAYDAH": "AIN AL FAYDAH",
+
+        "AL DHAHRAH": "AL DHAHRAH",
+        "AL DHARAH": "AL DHAHRAH",
+        "AL DAHRAH": "AL DHAHRAH",
+
+        "FALAJ HAZZA'": "FALAJ HAZZA'",
+        "FALAJ HAZZA": "FALAJ HAZZA'",
+        "FALAJ HAZZAA": "FALAJ HAZZA'",
+        "FALAJ HAZAA": "FALAJ HAZZA'",
+
+        "ZAKHIR": "ZAKHIR",
         "ZAKHER": "ZAKHIR",
         "ZAKIR": "ZAKHIR",
-        "BU KIRIYYAH": "BU KIRAYYAH",
-        "BU KIRAYAH": "BU KIRAYYAH",
-        "ABU HUREIBAH": "ABU HIRAYBAH",
-        "UMM GHAFAH": "UM GHAFAH",
-        "UMM AL ZUMOUL": "UM AL ZUMOUL",
-        "AL QOU'": "AL QOU",
-        "AL ARAD": "AL A'RAD",
+
+        "INDUSTRIAL CITY": "INDUSTRIAL CITY",
+        "AL AIN INDUSTRIAL CITY": "INDUSTRIAL CITY",
+
+        "AL QISEES": "AL QISEES",
         "AL QISAYS": "AL QISEES",
         "AL QISSAIS": "AL QISEES",
-        "FALAJ HAZZA": "FALAJ HAZZA'",
-        "SHIBAT AL WUTAH": "SHI'BAT AL WUTAH",
-        "AIN AL FAYDA": "AIN AL FAYDAH",
-        "MBAZZARAH AL KHADRAH": "MBAZZARAH AL KHADRA",
-        "AL DAHIR": "AL DHAHIR",
-        "AL MUTAWA": "AL MUTAWAH"
+        "AL QUSAIS": "AL QISEES",
+
+        "AL IQABIYYAH": "AL IQABIYYAH",
+        "AL IQABIYA": "AL IQABIYYAH",
+        "AL AQABIYYAH": "AL IQABIYYAH",
+
+        "AL RAWDAH AL SHARQIYAH": "AL RAWDAH AL SHARQIYAH",
+        "AL RAWDAH AL SHARQIYA": "AL RAWDAH AL SHARQIYAH",
+        "AL RAWDA AL SHARQIYAH": "AL RAWDAH AL SHARQIYAH",
+
+        "AL QOU": "AL QOU",
+        "AL QOU'": "AL QOU",
+        "AL QUA": "AL QOU",
+        "AL QUA'A": "AL QOU",
+        "AL QUA’A": "AL QOU",
+
+        "BU KIRAYYAH": "BU KIRAYYAH",
+        "BU KIRIYYAH": "BU KIRAYYAH",
+        "BU KIRAYAH": "BU KIRAYYAH",
+        "BU KRIYYAH": "BU KIRAYYAH",
+        "BU KRIYAH": "BU KIRAYYAH",
+
+        "AL WIQAN": "AL WIQAN",
+        "AL WIGAN": "AL WIQAN",
+        "WIQAN": "AL WIQAN",
+
+        "UM AL ZUMOUL": "UM AL ZUMOUL",
+        "UMM AL ZUMOUL": "UM AL ZUMOUL",
+        "UM AL ZUMOOL": "UM AL ZUMOUL",
+        "UMM AL ZUMOOL": "UM AL ZUMOUL",
+
+        "ABU HIRAYBAH": "ABU HIRAYBAH",
+        "ABU HUREIBAH": "ABU HIRAYBAH",
+        "ABU HIRAYBA": "ABU HIRAYBAH",
+        "ABU HURAIBAH": "ABU HIRAYBAH",
+
+        "AL A'RAD": "AL A'RAD",
+        "AL A’RAD": "AL A'RAD",
+        "AL ARAD": "AL A'RAD",
+        "AL A RAD": "AL A'RAD"
       };
 
       return aliases[n] || n;
@@ -753,7 +885,8 @@
           item.name ||
           '';
 
-        lookup[normalizeName(areaName)] = item;
+        const normalized = normalizeName(areaName);
+        lookup[normalized] = item;
       });
 
       return lookup;
