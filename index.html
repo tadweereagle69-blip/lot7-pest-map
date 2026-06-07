@@ -4,13 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>Lot 7 AI Pest Risk & Operational Priority Dashboard</title>
+  <title>Lot 7 AI Pest Risk Dashboard</title>
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     :root {
@@ -20,17 +16,14 @@
       --border-blue: #b8d4ea;
       --text-dark: #1f2933;
       --muted-text: #5f6b7a;
-
       --risk-green: #2e7d32;
       --risk-yellow: #fbc02d;
       --risk-orange: #ef7d00;
       --risk-red: #c62828;
-
       --card-bg: #ffffff;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -88,19 +81,6 @@
       padding: 14px 16px 16px 16px;
       overflow-y: auto;
       max-height: calc(100vh - 300px);
-    }
-
-    .panel-body::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .panel-body::-webkit-scrollbar-thumb {
-      background: #b8d4ea;
-      border-radius: 8px;
-    }
-
-    .panel-body::-webkit-scrollbar-track {
-      background: #f1f6fb;
     }
 
     .summary-line {
@@ -209,10 +189,6 @@
       border-bottom: 1px solid #edf2f7;
     }
 
-    .top-risk-item:last-child {
-      border-bottom: none;
-    }
-
     .risk-score {
       font-weight: 700;
       text-align: center;
@@ -231,7 +207,6 @@
       color: var(--risk-green);
     }
 
-    .badge-yellow,
     .badge-amber {
       background: #fff8df;
       color: #9a6a00;
@@ -258,7 +233,7 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
       border: 1px solid var(--border-blue);
       font-size: 13px;
-      width: 280px;
+      width: 255px;
     }
 
     .legend-box h3 {
@@ -307,7 +282,7 @@
 
     .status-note {
       margin-top: 8px;
-      color: var(--muted-text);
+      color: #5f4b00;
       font-size: 12px;
       line-height: 1.35;
       background: #fff8e1;
@@ -322,7 +297,7 @@
 
     .leaflet-popup-content {
       margin: 12px 14px;
-      min-width: 230px;
+      min-width: 240px;
     }
 
     .popup-title {
@@ -335,10 +310,6 @@
     .popup-row {
       margin: 5px 0;
       font-size: 13px;
-    }
-
-    .popup-row strong {
-      color: #263238;
     }
 
     .popup-recommendation {
@@ -361,11 +332,6 @@
     }
 
     @media (max-width: 768px) {
-      #map {
-        height: 100vh;
-        width: 100%;
-      }
-
       .control-panel {
         position: absolute;
         top: auto;
@@ -425,53 +391,12 @@
         overflow-y: auto;
       }
 
-      .summary-line {
-        font-size: 12px;
-        margin-bottom: 8px;
-      }
-
       .kpi-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-      }
-
-      .kpi-card {
-        padding: 8px 5px;
-      }
-
-      .kpi-card .number {
-        font-size: 20px;
-      }
-
-      .kpi-card .label {
-        font-size: 11px;
-      }
-
-      select {
-        font-size: 13px;
-        padding: 9px;
-      }
-
-      button {
-        padding: 10px;
-        font-size: 13px;
-      }
-
-      .top-risk-panel h3 {
-        font-size: 14px;
-      }
-
-      .top-risk-item {
-        grid-template-columns: 1fr 38px 70px;
-        font-size: 12px;
-        padding: 6px 0;
       }
 
       .legend-box,
-      .status-box {
-        display: none;
-      }
-
+      .status-box,
       .leaflet-control-zoom {
         display: none;
       }
@@ -484,17 +409,14 @@
 
   <div class="control-panel">
     <div class="panel-header">
-      <button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">
-        Hide
-      </button>
-
-      <h2>Lot 7 AI Pest Risk & Operational Priority Dashboard</h2>
-      <p>35 Operational Areas – Al Ain | Open-Meteo + AI Operational Priority Rules</p>
+      <button class="mobile-panel-toggle" onclick="toggleMobilePanel(event)">Hide</button>
+      <h2>Lot 7 AI Pest Risk Dashboard</h2>
+      <p>Map color = Pest Risk | ULV shown separately</p>
     </div>
 
     <div class="panel-body">
       <div class="summary-line" id="summaryLine">
-        Loading operational areas and priority records...
+        Loading operational areas and pest risk records...
       </div>
 
       <div class="kpi-grid">
@@ -505,7 +427,7 @@
 
         <div class="kpi-card attention">
           <div class="number" id="needAttentionCount">0</div>
-          <div class="label">Need Attention</div>
+          <div class="label">Pest Attention</div>
         </div>
 
         <div class="kpi-card suspend">
@@ -523,44 +445,37 @@
         <option value="">Select Area / اختر المنطقة</option>
       </select>
 
-      <button class="btn-primary" onclick="zoomToSelectedArea()">
-        Zoom to Selected Area
-      </button>
-
-      <button class="btn-secondary" onclick="showAllAreas()">
-        Show All Areas
-      </button>
+      <button class="btn-primary" onclick="zoomToSelectedArea()">Zoom to Selected Area</button>
+      <button class="btn-secondary" onclick="showAllAreas()">Show All Areas</button>
 
       <div class="top-risk-panel">
-        <h3>Top Operational Priority Areas</h3>
-        <div id="topRiskAreasList">
-          Loading...
-        </div>
+        <h3>Top Pest Risk Areas</h3>
+        <div id="topRiskAreasList">Loading...</div>
       </div>
     </div>
   </div>
 
   <div class="legend-box">
-    <h3>Operational Priority Classification</h3>
+    <h3>Pest Risk Classification</h3>
 
     <div class="legend-row">
       <div class="legend-color" style="background:#2e7d32;"></div>
-      <span>Green: Routine Monitoring</span>
+      <span>Green: Low Pest Risk</span>
     </div>
 
     <div class="legend-row">
       <div class="legend-color" style="background:#fbc02d;"></div>
-      <span>Amber: Moderate Operational Priority</span>
+      <span>Amber: Moderate Pest Risk</span>
     </div>
 
     <div class="legend-row">
       <div class="legend-color" style="background:#ef7d00;"></div>
-      <span>Orange: Elevated Operational Priority</span>
+      <span>Orange: Elevated Pest Risk</span>
     </div>
 
     <div class="legend-row">
       <div class="legend-color" style="background:#c62828;"></div>
-      <span>Red: High Operational Priority / ULV Suspend</span>
+      <span>Red: High Pest Risk</span>
     </div>
   </div>
 
@@ -569,15 +484,12 @@
     <p><strong>Data File:</strong> lot7-risk-data.json</p>
     <p><strong>Last Updated:</strong> <span id="lastUpdated">Loading...</span></p>
     <p><strong>Forecast Period:</strong> <span id="forecastPeriod">Loading...</span></p>
-    <p><strong>Data Source:</strong> Open-Meteo + AI Operational Priority Rules</p>
+    <p><strong>Data Source:</strong> Open-Meteo + AI Pest Risk Rules</p>
     <div class="status-note">
-      Map colors represent operational priority based on weather forecast, ULV suitability,
-      and potential pest activity. They do not confirm current infestation and must be verified
-      by field inspection.
+      Map colors show pest activity risk only. ULV status is shown separately and may be suspended due to wind. Colors do not confirm infestation. Field verification is required.
     </div>
   </div>
 
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
@@ -604,84 +516,44 @@
 
     function getGeoJsonAreaName(feature) {
       const p = feature.properties || {};
-
-      return (
-        p.name ||
-        p.Name ||
-        p.area_name ||
-        p.AREA_NAME ||
-        p.AreaName ||
-        p.area ||
-        p.AREA ||
-        p.zone ||
-        p.Zone ||
-        ''
-      );
+      return p.name || p.Name || p.area_name || p.AREA_NAME || p.AreaName || p.area || p.AREA || p.zone || p.Zone || '';
     }
 
     function getRiskColor(item) {
       const mapColor = normalizeName(item?.map_color || item?.mapColor || '');
       const riskLevel = normalizeName(item?.risk_level || item?.riskLevel || '');
-      const ulvStatus = normalizeName(item?.ulv_status || item?.ulvStatus || '');
       const score = Number(item?.risk_score ?? item?.riskScore ?? 0);
 
-      if (
-        mapColor.includes('RED') ||
-        riskLevel.includes('HIGH') ||
-        ulvStatus.includes('SUSPEND') ||
-        score >= 75
-      ) {
-        return '#c62828';
-      }
-
-      if (
-        mapColor.includes('ORANGE') ||
-        riskLevel.includes('ELEVATED') ||
-        score >= 60
-      ) {
-        return '#ef7d00';
-      }
-
-      if (
-        mapColor.includes('AMBER') ||
-        mapColor.includes('YELLOW') ||
-        riskLevel.includes('MODERATE') ||
-        score >= 50
-      ) {
-        return '#fbc02d';
-      }
-
+      if (mapColor.includes('RED') || riskLevel.includes('HIGH') || score >= 81) return '#c62828';
+      if (mapColor.includes('ORANGE') || riskLevel.includes('ELEVATED') || score >= 61) return '#ef7d00';
+      if (mapColor.includes('AMBER') || mapColor.includes('YELLOW') || riskLevel.includes('MODERATE') || score >= 50) return '#fbc02d';
       return '#2e7d32';
     }
 
     function getBadgeClass(item) {
-      const color = normalizeName(item?.map_color || item?.mapColor || '');
+      const mapColor = normalizeName(item?.map_color || item?.mapColor || '');
+      const riskLevel = normalizeName(item?.risk_level || item?.riskLevel || '');
       const score = Number(item?.risk_score ?? item?.riskScore ?? 0);
 
-      if (color.includes('RED') || score >= 75) return 'badge-red';
-      if (color.includes('ORANGE') || score >= 60) return 'badge-orange';
-      if (color.includes('AMBER') || color.includes('YELLOW') || score >= 50) return 'badge-amber';
+      if (mapColor.includes('RED') || riskLevel.includes('HIGH') || score >= 81) return 'badge-red';
+      if (mapColor.includes('ORANGE') || riskLevel.includes('ELEVATED') || score >= 61) return 'badge-orange';
+      if (mapColor.includes('AMBER') || mapColor.includes('YELLOW') || riskLevel.includes('MODERATE') || score >= 50) return 'badge-amber';
       return 'badge-green';
     }
 
-    function getDisplayPriorityLabel(item) {
-      const color =
-        item?.map_color ||
-        item?.mapColor ||
-        item?.risk_level ||
-        item?.riskLevel ||
-        'Green';
+    function getDisplayPestRiskLabel(item) {
+      const riskLevel = item?.risk_level || item?.riskLevel || '';
+      const mapColor = item?.map_color || item?.mapColor || '';
+      const score = Number(item?.risk_score ?? item?.riskScore ?? 0);
 
-      const normalized = normalizeName(color);
-
-      if (normalized.includes('RED')) return 'High';
-      if (normalized.includes('ORANGE')) return 'Elevated';
-      if (normalized.includes('AMBER') || normalized.includes('YELLOW')) return 'Moderate';
-      if (normalized.includes('HIGH')) return 'High';
-      if (normalized.includes('ELEVATED')) return 'Elevated';
-      if (normalized.includes('MODERATE')) return 'Moderate';
-
-      return 'Routine';
+      if (riskLevel) return riskLevel;
+      if (mapColor === 'Red') return 'High';
+      if (mapColor === 'Orange') return 'Elevated';
+      if (mapColor === 'Amber') return 'Moderate';
+      if (score >= 81) return 'High';
+      if (score >= 61) return 'Elevated';
+      if (score >= 50) return 'Moderate';
+      return 'Low';
     }
 
     function isNeedAttention(item) {
@@ -693,9 +565,9 @@
         item?.need_attention === true ||
         item?.needAttention === true ||
         score >= 50 ||
-        mapColor.includes('ORANGE') ||
         mapColor.includes('AMBER') ||
         mapColor.includes('YELLOW') ||
+        mapColor.includes('ORANGE') ||
         mapColor.includes('RED') ||
         riskLevel.includes('MODERATE') ||
         riskLevel.includes('ELEVATED') ||
@@ -705,32 +577,15 @@
 
     function isUlvSuspend(item) {
       const ulv = normalizeName(item?.ulv_status || item?.ulvStatus || '');
-
-      return (
-        item?.ulv_suspend === true ||
-        item?.ulvSuspend === true ||
-        ulv.includes('SUSPEND')
-      );
+      return item?.ulv_suspend === true || item?.ulvSuspend === true || ulv.includes('SUSPEND');
     }
 
     function createRiskLookup(data) {
       const lookup = {};
-      let records = [];
-
-      if (Array.isArray(data)) {
-        records = data;
-      } else {
-        records = data?.areas || data?.risk_records || data?.records || [];
-      }
+      const records = Array.isArray(data) ? data : data?.areas || data?.risk_records || data?.records || [];
 
       records.forEach(item => {
-        const areaName =
-          item.area_name ||
-          item.areaName ||
-          item.area ||
-          item.name ||
-          '';
-
+        const areaName = item.area_name || item.areaName || item.area || item.name || '';
         lookup[normalizeName(areaName)] = item;
       });
 
@@ -738,11 +593,7 @@
     }
 
     function getRiskRecords() {
-      if (Array.isArray(riskData)) {
-        return riskData;
-      }
-
-      return riskData?.areas || riskData?.risk_records || riskData?.records || [];
+      return Array.isArray(riskData) ? riskData : riskData?.areas || riskData?.risk_records || riskData?.records || [];
     }
 
     async function loadData() {
@@ -758,17 +609,14 @@
         updateStatusBox();
       } catch (error) {
         console.error('Error loading data:', error);
-        document.getElementById('summaryLine').textContent =
-          'Error loading map data. Please check areas.geojson and lot7-risk-data.json.';
+        document.getElementById('summaryLine').textContent = 'Error loading map data. Please check areas.geojson and lot7-risk-data.json.';
       }
     }
 
     function buildMap() {
       const riskLookup = createRiskLookup(riskData);
 
-      if (geojsonLayer) {
-        map.removeLayer(geojsonLayer);
-      }
+      if (geojsonLayer) map.removeLayer(geojsonLayer);
 
       areaLayers = {};
 
@@ -795,11 +643,7 @@
 
           layer.on({
             mouseover: function(e) {
-              e.target.setStyle({
-                weight: 4,
-                color: '#003b66',
-                fillOpacity: 0.82
-              });
+              e.target.setStyle({ weight: 4, color: '#003b66', fillOpacity: 0.82 });
               e.target.bringToFront();
             },
             mouseout: function(e) {
@@ -807,16 +651,12 @@
             }
           });
 
-          const popupHtml = buildPopup(areaName, riskItem);
-          layer.bindPopup(popupHtml);
-
+          layer.bindPopup(buildPopup(areaName, riskItem));
           addAreaToDropdown(areaName);
         }
       }).addTo(map);
 
-      map.fitBounds(geojsonLayer.getBounds(), {
-        padding: [30, 30]
-      });
+      map.fitBounds(geojsonLayer.getBounds(), { padding: [30, 30] });
     }
 
     function buildPopup(areaName, item) {
@@ -824,42 +664,32 @@
         return `
           <div class="popup-title">${areaName}</div>
           <div class="popup-row"><strong>Status:</strong> No data found</div>
-          <div class="popup-recommendation">
-            Check area name matching between areas.geojson and lot7-risk-data.json.
-          </div>
+          <div class="popup-recommendation">Check area name matching between areas.geojson and lot7-risk-data.json.</div>
         `;
       }
 
       const score = item.risk_score ?? item.riskScore ?? 'N/A';
+      const pestRisk = getDisplayPestRiskLabel(item);
       const mosquito = item.mosquito_risk ?? item.mosquitoRisk ?? 'N/A';
       const fly = item.fly_risk ?? item.flyRisk ?? 'N/A';
       const ulv = item.ulv_status ?? item.ulvStatus ?? 'N/A';
       const recommendation = item.recommendation || 'Routine monitoring';
-      const label = getDisplayPriorityLabel(item);
 
       return `
         <div class="popup-title">${areaName}</div>
-        <div class="popup-row"><strong>Operational Priority Score:</strong> ${score}</div>
-        <div class="popup-row"><strong>Operational Priority Level:</strong> ${label}</div>
+        <div class="popup-row"><strong>Pest Risk Score:</strong> ${score}</div>
+        <div class="popup-row"><strong>Pest Risk Level:</strong> ${pestRisk}</div>
         <div class="popup-row"><strong>Mosquito Risk:</strong> ${mosquito}</div>
         <div class="popup-row"><strong>Fly Risk:</strong> ${fly}</div>
         <div class="popup-row"><strong>ULV Status:</strong> ${ulv}</div>
-        <div class="popup-recommendation">
-          <strong>Recommendation:</strong><br>
-          ${recommendation}
-        </div>
-        <div class="popup-note">
-          This priority level does not confirm current infestation. Field verification is required.
-        </div>
+        <div class="popup-recommendation"><strong>Recommendation:</strong><br>${recommendation}</div>
+        <div class="popup-note">Map color reflects pest risk only. ULV status is separate and may be suspended due to wind.</div>
       `;
     }
 
     function addAreaToDropdown(areaName) {
       const select = document.getElementById('areaSelect');
-
-      const exists = Array.from(select.options).some(
-        option => option.value === normalizeName(areaName)
-      );
+      const exists = Array.from(select.options).some(option => option.value === normalizeName(areaName));
 
       if (!exists && areaName) {
         const option = document.createElement('option');
@@ -871,12 +701,7 @@
 
     function updateDashboard() {
       const records = getRiskRecords();
-
-      const totalAreas =
-        riskData.totalAreas ||
-        riskData.total_areas ||
-        35;
-
+      const totalAreas = riskData.totalAreas || riskData.total_areas || 35;
       const needAttention = records.filter(isNeedAttention).length;
       const ulvSuspend = records.filter(isUlvSuspend).length;
       const routine = Math.max(totalAreas - needAttention, 0);
@@ -886,8 +711,7 @@
       document.getElementById('ulvSuspendCount').textContent = ulvSuspend;
       document.getElementById('routineCount').textContent = routine;
 
-      document.getElementById('summaryLine').textContent =
-        `Loaded ${totalAreas} areas and ${records.length} operational priority records.`;
+      document.getElementById('summaryLine').textContent = `Loaded ${totalAreas} areas and ${records.length} pest risk records.`;
 
       updateTopRiskAreas(records);
     }
@@ -897,22 +721,18 @@
 
       const topAreas = records
         .filter(item => Number(item.risk_score ?? item.riskScore ?? 0) > 0)
-        .sort((a, b) => {
-          const scoreA = Number(a.risk_score ?? a.riskScore ?? 0);
-          const scoreB = Number(b.risk_score ?? b.riskScore ?? 0);
-          return scoreB - scoreA;
-        })
+        .sort((a, b) => Number(b.risk_score ?? b.riskScore ?? 0) - Number(a.risk_score ?? a.riskScore ?? 0))
         .slice(0, 5);
 
       if (topAreas.length === 0) {
-        container.innerHTML = '<div class="summary-line">No operational priority records available.</div>';
+        container.innerHTML = '<div class="summary-line">No pest risk records available.</div>';
         return;
       }
 
       container.innerHTML = topAreas.map(item => {
         const areaName = item.area_name || item.areaName || item.area || item.name || 'Unknown Area';
         const score = item.risk_score ?? item.riskScore ?? 0;
-        const label = getDisplayPriorityLabel(item);
+        const label = getDisplayPestRiskLabel(item);
         const badgeClass = getBadgeClass(item);
 
         return `
@@ -928,27 +748,15 @@
     function updateStatusBox() {
       const now = new Date();
 
-      const forecastStart =
-        riskData.forecastStart ||
-        riskData.forecast_start ||
-        riskData.forecastPeriod?.start ||
-        '';
+      const forecastStart = riskData.forecastStart || riskData.forecast_start || riskData.forecastPeriod?.start || '';
+      const forecastEnd = riskData.forecastEnd || riskData.forecast_end || riskData.forecastPeriod?.end || '';
 
-      const forecastEnd =
-        riskData.forecastEnd ||
-        riskData.forecast_end ||
-        riskData.forecastPeriod?.end ||
-        '';
-
-      document.getElementById('lastUpdated').textContent =
-        now.toLocaleString();
+      document.getElementById('lastUpdated').textContent = now.toLocaleString();
 
       if (forecastStart && forecastEnd) {
-        document.getElementById('forecastPeriod').textContent =
-          `${forecastStart} to ${forecastEnd}`;
+        document.getElementById('forecastPeriod').textContent = `${forecastStart} to ${forecastEnd}`;
       } else {
-        document.getElementById('forecastPeriod').textContent =
-          'Latest 16-day forecast';
+        document.getElementById('forecastPeriod').textContent = 'Latest 16-day forecast';
       }
     }
 
@@ -961,38 +769,24 @@
       }
 
       const layer = areaLayers[selected];
-
-      map.fitBounds(layer.getBounds(), {
-        padding: [40, 40],
-        maxZoom: 14
-      });
-
+      map.fitBounds(layer.getBounds(), { padding: [40, 40], maxZoom: 14 });
       layer.openPopup();
     }
 
     function showAllAreas() {
       if (geojsonLayer) {
-        map.fitBounds(geojsonLayer.getBounds(), {
-          padding: [30, 30]
-        });
+        map.fitBounds(geojsonLayer.getBounds(), { padding: [30, 30] });
       }
     }
 
     function toggleMobilePanel(event) {
-      if (event) {
-        event.stopPropagation();
-      }
+      if (event) event.stopPropagation();
 
       const panel = document.querySelector('.control-panel');
       const button = document.querySelector('.mobile-panel-toggle');
 
       panel.classList.toggle('collapsed');
-
-      if (panel.classList.contains('collapsed')) {
-        button.textContent = 'Show';
-      } else {
-        button.textContent = 'Hide';
-      }
+      button.textContent = panel.classList.contains('collapsed') ? 'Show' : 'Hide';
     }
 
     loadData();
